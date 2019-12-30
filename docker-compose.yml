@@ -7,4 +7,6 @@ services:
       - .:/usr/app/
       - /usr/app/node_modules
     ports:
-      - "49164:8080"
+      - "49163:8080"
+    env_file:
+      - .env
