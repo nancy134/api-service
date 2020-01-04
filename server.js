@@ -3,6 +3,7 @@
 const express = require('express');
 const api = require('./api');
 const bodyParser = require('body-parser');
+const tesla = require('./tesla');
 
 // Constants
 const PORT = 8080;
@@ -13,6 +14,13 @@ const app = express();
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
+function getToken(req){
+    var authorization = req.get("Authorization");
+    var array = authorization.split(" ");
+    var token = array[1];
+    return token;
+}
+
 function getTenantName(req){
   var host = req.get('host');
   var array = host.split(".");
@@ -20,7 +28,7 @@ function getTenantName(req){
   return tenant;
 }
 app.get('/', (req, res) => {
-  res.send('tenant.phowma.com\n');
+  res.send('api-service.phowma.com\n');
 });
 
 app.post('/signin', (req,res) => {
@@ -35,4 +43,13 @@ app.post('/signin', (req,res) => {
     });
 });
 
+app.get('/vehicles/locations', (req, res) => {
+    var token = getToken(req);
+    var locationsPromise = tesla.locations(token);
+    locationsPromise.then(function(result){
+        res.json(result);
+    }).catch(function(err){
+        res.send(err);
+    });
+});
 app.listen(PORT, HOST);
