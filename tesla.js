@@ -67,11 +67,6 @@ exports.locations = function(access_token){
                 var locationPromise = new location(access_token, data.response[i].id);
                 locationPromises.push(locationPromise);
             }
-            /*
-            var locationPromise;
-            locationPromise = new location(access_token, "57918015329878853");
-            locationPromises.push(locationPromise);
-            */
             return Promise.all(locationPromises);
         }).then(function(vehicles){
             resolve(vehicles);

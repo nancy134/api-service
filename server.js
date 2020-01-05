@@ -4,6 +4,7 @@ const express = require('express');
 const api = require('./api');
 const bodyParser = require('body-parser');
 const tesla = require('./tesla');
+const cors = require('cors');
 
 // Constants
 const PORT = 8080;
@@ -13,6 +14,7 @@ const HOST = '0.0.0.0';
 const app = express();
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+app.use(cors());
 
 function getToken(req){
     var authorization = req.get("Authorization");
