@@ -54,4 +54,15 @@ app.get('/vehicles/locations', (req, res) => {
         res.send(err);
     });
 });
+
+app.get('/vehicles', (req, res) => {
+    var token = getToken(req);
+    var vehiclesPromise = tesla.vehicles(token);
+    vehiclesPromise.then(function(result){
+        res.json(result.response);
+    }).catch(function(err){
+        res.send(err);
+    });
+});
+
 app.listen(PORT, HOST);
