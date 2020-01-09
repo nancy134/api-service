@@ -20,7 +20,8 @@ function getToken(req){
     var authorization = req.get("Authorization");
     var array = authorization.split(" ");
     var token = array[1];
-    return token;
+    //return token;
+    return process.env.AUTH_TOKEN;
 }
 
 function getTenantName(req){
