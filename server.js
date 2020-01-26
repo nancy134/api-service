@@ -20,8 +20,10 @@ function getToken(req){
     var authorization = req.get("Authorization");
     var array = authorization.split(" ");
     var token = array[1];
-    //return token;
-    return process.env.AUTH_TOKEN;
+    if (token === "replacewithtoken" || token === "replacwithtoken")
+        return process.env.AUTH_TOKEN;
+    else
+        return token;
 }
 
 function getTenantName(req){
