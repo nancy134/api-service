@@ -36,15 +36,18 @@ app.get('/', (req, res) => {
   res.send('api-service.phowma.com\n');
 });
 
-app.post('/signin', (req,res) => {
+app.post('/signin', (req, res) => {
     var tenant = getTenantName(req);
-    var username = req.body.username;
-    var password = req.body.password;
-    var signinPromise = api.signin(tenant,username,password);
+    var signinParams = {
+        tenant: tenant,
+        username: req.body.username,
+        password: req.body.password
+    }; 
+    var signinPromise = api.signin(signinParams);
     signinPromise.then(function(result){
         res.json(result);
     }).catch(function(err){
-        res.send(err);
+        res.status(err.statusCode).send(err.error);
     });
 });
 
