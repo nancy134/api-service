@@ -36,6 +36,21 @@ app.get('/', (req, res) => {
   res.send('api-service.phowma.com\n');
 });
 
+app.post('/signup', (req, res) => {
+    var tenant = getTenantName(req);
+    var signupParams = {
+        tenant: tenant,
+        username: req.body.username,
+        password: req.body.password
+    };
+    var signupPromise = api.signup(signupParams);
+    signupPromise.then(function(result){
+        res.json(result);
+    }).catch(function(err){
+        res.status(err.statusCode).send(err.error);
+    });
+});
+
 app.post('/signin', (req, res) => {
     var tenant = getTenantName(req);
     var signinParams = {
@@ -49,6 +64,21 @@ app.post('/signin', (req, res) => {
     }).catch(function(err){
         res.status(err.statusCode).send(err.error);
     });
+});
+
+app.post('/confirmSignUp', (req, res) => {
+    var tenant = getTenantName(req);
+    var confirmSignUpParams = {
+        tenant: tenant,
+        username: req.body.username,
+        code: req.body.code
+    };
+    var confirmSignUpPromise = api.confirmSignUp(confirmSignUpParams);
+    confirmSignUpPromise.then(function(result){
+        res.json(result);
+    }).catch(function(err){
+        res.status(err.statusCode).send(err.error);
+    }); 
 });
 
 app.get('/vehicles/locations', (req, res) => {
