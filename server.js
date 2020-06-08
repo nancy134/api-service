@@ -4,6 +4,7 @@ const express = require('express');
 const api = require('./api');
 const bodyParser = require('body-parser');
 const tesla = require('./tesla');
+const vexService = require('./vex');
 const cors = require('cors');
 
 // Constants
@@ -101,4 +102,33 @@ app.get('/vehicles', (req, res) => {
     });
 });
 
+// This is temporary to make sure internal api works
+app.get('/vexAuth', (req, res) => {
+    console.log("server /vexAuth");
+    var vexAuthPromise = vexService.getAuthToken();
+    vexAuthPromise.then(function(result){
+        res.json(result);
+    }).catch(function(err){
+        res.status(400).json(err);
+    });
+});
+// This is temporary to make ure internal api works
+app.get('/testCreateStore', (req, res) => {
+    var body = {
+        store: {
+            name: "test3",
+            time_zone: "Eastern Time (US & Canada)",
+            cell_phone: "7813547330"
+        }
+    };
+    var username = "members@vexapps.com"
+    var password = "6BLxQBkHvTQVejbo5YzM";
+    var createStorePromise = vexService.createStore(body, username, password);
+    createStorePromise.then(function(results){
+        res.json(results);
+    }).catch(function(err){
+        console.log("err: "+err);
+        res.status(400).json(err);
+    });
+});
 app.listen(PORT, HOST);
