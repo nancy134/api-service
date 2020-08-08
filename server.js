@@ -33,53 +33,91 @@ function getTenantName(req){
   var tenant = array[0];
   return tenant;
 }
+
+Object.prototype.getName = function() {
+   var funcNameRegex = /function (.{1,})\(/;
+   var results = (funcNameRegex).exec((this).constructor.toString());
+   return (results && results.length > 1) ? results[1] : "";
+};
+
+function formatError(err){
+    var ret = {};
+
+    if (err.statusCode) ret.statusCode = err.statusCode;
+    else err.statusCode = 500;
+    if (err.message) ret.message = err.message;
+    else ret.message = "Unknown error";
+    ret.originalMessage = err;
+    ret.service = "ApiService";
+
+    if (err.error){
+        if (err.error.service){
+            ret = err.error;
+        } else if (err.error.getName() === "String"){
+            ret.message = err.error;
+        }
+    }
+    return(ret);
+}
+
 app.get('/', (req, res) => {
   res.send('api-service.phowma.com\n');
 });
 
 app.post('/signup', (req, res) => {
     var tenant = getTenantName(req);
-    var signupParams = {
-        tenant: tenant,
-        username: req.body.username,
-        password: req.body.password
-    };
-    var signupPromise = api.signup(signupParams);
+    var signupPromise = api.signup(
+        tenant,
+        req.body.username,
+        req.body.password
+    );
     signupPromise.then(function(result){
         res.json(result);
     }).catch(function(err){
-        res.status(err.statusCode).send(err.error);
+        var formattedError = formatError(err);
+        res.status(formattedError.statusCode).send(formattedError);
     });
 });
 
 app.post('/signin', (req, res) => {
     var tenant = getTenantName(req);
-    var signinParams = {
-        tenant: tenant,
-        username: req.body.username,
-        password: req.body.password
-    }; 
-    var signinPromise = api.signin(signinParams);
+    var signinPromise = api.signin(
+        tenant,
+        req.body.username,
+        req.body.password
+    );
     signinPromise.then(function(result){
         res.json(result);
     }).catch(function(err){
-        res.status(err.statusCode).send(err.error);
+        var formattedError = formatError(err);
+        res.status(formattedError.statusCode).send(formattedError);
     });
 });
 
 app.post('/confirmSignUp', (req, res) => {
     var tenant = getTenantName(req);
-    var confirmSignUpParams = {
-        tenant: tenant,
-        username: req.body.username,
-        code: req.body.code
-    };
-    var confirmSignUpPromise = api.confirmSignUp(confirmSignUpParams);
+    var confirmSignUpPromise = api.confirmSignUp(
+        tenant,
+        req.body.username,
+        req.body.code
+    );
     confirmSignUpPromise.then(function(result){
         res.json(result);
     }).catch(function(err){
-        res.status(err.statusCode).send(err.error);
+        var formattedError = formatError(err);
+        res.status(formattedError.statusCode).send(formattedError);
     }); 
+});
+
+app.get('/deleteUser', (req, res) => {
+    var tenant = getTenantName(req);
+    var deleteUserPromise = api.deleteUser(tenant, req.query.email);
+    deleteUserPromise.then(function(result){
+        res.json(result);
+    }).catch(function(err){
+        var formattedError = formatError(err);
+        res.status(formattedError.statusCode).send(formattedError);
+    });
 });
 
 app.get('/vehicles/locations', (req, res) => {
@@ -104,8 +142,7 @@ app.get('/vehicles', (req, res) => {
 
 // This is temporary to make sure internal api works
 app.get('/vexAuth', (req, res) => {
-    console.log("server /vexAuth");
-    var vexAuthPromise = vexService.getAuthToken();
+    var vexAuthPromise = vexService.getAuthToken(process.env.VEX_AUTH_USERNAME, process.env.VEX_AUTH_PASSWORD);
     vexAuthPromise.then(function(result){
         res.json(result);
     }).catch(function(err){
@@ -115,20 +152,51 @@ app.get('/vexAuth', (req, res) => {
 // This is temporary to make ure internal api works
 app.get('/testCreateStore', (req, res) => {
     var body = {
-        store: {
-            name: "test3",
-            time_zone: "Eastern Time (US & Canada)",
-            cell_phone: "7813547330"
+        "store":
+        {
+            "name" : "testCreateStore@vexapps.com",
+            "short_name" : "testCreateStore@vexapps.com",
+            "formatted_name" : "testCreateStore@vexapps.com",
+            "time_zone": "Eastern Time (US & Canada)",
+            "cell_phone" : "7813547330",
+            "active" : true,
+            "address_attributes" : {
+                "country" : "US",
+                "state": "Massachusetts",
+                "street":"11 Town House Road",
+                "city": "Weston",
+                "zip": "02495"
+            },
+            "users_attributes": [
+            {
+                "name": "testCreateStore@vexapps.com",
+                "email" : "testCreateStore@vexapps.com",
+                "cognito" : true,
+                "password" : "12345678",
+                "password_confirmation" : "12345678"
+            }]
         }
     };
+
     var username = "members@vexapps.com"
     var password = "6BLxQBkHvTQVejbo5YzM";
     var createStorePromise = vexService.createStore(body, username, password);
     createStorePromise.then(function(results){
         res.json(results);
     }).catch(function(err){
-        console.log("err: "+err);
         res.status(400).json(err);
     });
 });
+
+// This is temporary to make sure interal api works
+app.get('/testPostConfirm', (req, res) => {
+    var username = req.query.email;
+    var postConfirmPromise = vexService.postConfirm(username);
+    postConfirmPromise.then(function(results){
+        res.json(results);
+    }).catch(function(err){
+        res.status(400).json(err);
+    });
+});
+
 app.listen(PORT, HOST);
