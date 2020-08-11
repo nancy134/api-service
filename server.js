@@ -109,6 +109,36 @@ app.post('/confirmSignUp', (req, res) => {
     }); 
 });
 
+app.post('/forgotPassword', (req, res) => {
+    var tenant = getTenantName(req);
+    var forgotPasswordPromise = api.forgotPassword(
+        tenant,
+        req.body.username
+    );
+    forgotPasswordPromise.then(function(result){
+        res.json(result);
+    }).catch(function(err){
+        var formattedError = formatError(err);
+        res.status(formattedError.statusCode).send(formattedError);
+    });
+});
+
+app.post('/confirmForgotPassword', (req, res) => {
+    var tenant = getTenantName(req);
+    var confirmForgotPasswordPromise = api.confirmForgotPassword(
+        tenant,
+        req.body.code,
+        req.body.password,
+        req.body.username
+    );
+    confirmForgotPasswordPromise.then(function(result){
+        res.json(result);
+    }).catch(function(err){
+        var formattedError = formatError(err);
+        res.status(formattedError.statusCode).send(formattedError);
+    });
+});
+
 app.get('/deleteUser', (req, res) => {
     var tenant = getTenantName(req);
     var deleteUserPromise = api.deleteUser(tenant, req.query.email);

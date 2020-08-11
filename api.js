@@ -90,6 +90,50 @@ var initiateAuth = function(cognito_client_id, username, password){
     });
 }
 
+var forgotPassword = function(cognito_client_id, username){
+    return new Promise(function(resolve, reject){
+        var url = process.env.AUTH_SERVICE + "/forgotPassword";
+        var body = {
+            cognitoClientId: cognito_client_id,
+            username: username
+        };
+        var options = {
+            method: 'POST',
+            uri: url,
+            body: body,
+            json: true
+        };
+        rp(options).then(function(resp){
+            resolve(resp);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+var confirmForgotPassword = function(cognito_client_id, code, password, username){
+    return new Promise(function(resolve, reject){
+        var url = process.env.AUTH_SERVICE + "/confirmForgotPassword";
+        var body = {
+            cognitoClientId: cognito_client_id,
+            code: code,
+            password: password,
+            username: username
+        };
+        var options = {
+            method: 'POST',
+            uri: url,
+            body: body,
+            json: true
+        };
+        rp(options).then(function(resp){
+            resolve(resp);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
 var postConfirm = function(resp, tenant, username){
     return new Promise(function(resolve, reject){
         if (tenant === "murban-api"){
@@ -150,6 +194,30 @@ exports.signin = function(tenant, username, password){
         .then(authResp => postSignin(authResp, tenant, username))
         .then(function(postSigninResp){
             resolve(postSigninResp);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.forgotPassword = function(tenant, username){
+    return new Promise(function(resolve, reject){
+        getTenant(tenant)
+        .then(resp => forgotPassword(resp.cognito_client_id, username))
+        .then(function(forgotPasswordResp){
+            resolve(forgotPasswordResp);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.confirmForgotPassword = function(tenant, code, password, username){
+    return new Promise(function(resolve, reject){
+        getTenant(tenant)
+        .then(resp => confirmForgotPassword(resp.cognito_client_id, code, password, username))
+        .then(function(resp){
+            resolve(resp);
         }).catch(function(err){
             reject(err);
         });
