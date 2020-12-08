@@ -229,4 +229,41 @@ app.get('/testPostConfirm', (req, res) => {
     });
 });
 
+app.get('/listings', (req, res) => {
+    var tenant = getTenantName(req);
+    listingServices.getListings(tenant,req).then(function(result){
+    }).catch(function(err){
+    });
+});
+
+app.get('/billing/getClientToken', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.getClientToken(tenant, IdToken).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        res.status(500).send(err);
+    });
+});
+
+app.post('/billing/paymentMethod', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.createPaymentMethod(tenant, IdToken, req.body).then(function(customerResult){
+        res.send(customerResult);
+    }).catch(function(err){
+        res.send(err);
+    });
+});
+
+app.get('/billing/paymentMethod', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.getPaymentMethod(tenant, IdToken).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        res.status(500).send(err);
+    });
+});
+
 app.listen(PORT, HOST);
