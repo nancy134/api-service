@@ -94,6 +94,16 @@ app.post('/signin', (req, res) => {
     });
 });
 
+app.post('/refreshToken', (req, res) => {
+    var tenant = getTenantName(req);
+    api.refreshToken(tenant, req.body.refreshToken).then(function(result){
+        res.status(201).json(result);
+    }).catch(function(err){
+        var formattedError = formatError(err);
+        res.status(formattedError.statusCode).send(formattedError);
+    });
+});
+
 app.post('/confirmSignUp', (req, res) => {
     var tenant = getTenantName(req);
     var confirmSignUpPromise = api.confirmSignUp(
@@ -242,7 +252,11 @@ app.get('/billing/getClientToken', (req, res) => {
     api.getClientToken(tenant, IdToken).then(function(result){
         res.send(result);
     }).catch(function(err){
-        res.status(500).send(err);
+        if (err.statusCode){
+            res.status(err.statusCode).send(err);
+        } else {
+            res.status(400).send(err);
+        }
     });
 });
 
@@ -266,4 +280,13 @@ app.get('/billing/paymentMethod', (req, res) => {
     });
 });
 
+app.get('/axiostest',(req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.axiosTest(tenant,IdToken).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        res.status(401).send(err);
+    });
+});
 app.listen(PORT, HOST);

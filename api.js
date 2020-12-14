@@ -1,4 +1,5 @@
 const rp = require('request-promise');
+const axios = require('axios');
 const vexService = require('./vex');
 
 Object.prototype.getName = function() { 
@@ -6,6 +7,17 @@ Object.prototype.getName = function() {
    var results = (funcNameRegex).exec((this).constructor.toString());
    return (results && results.length > 1) ? results[1] : "";
 };
+
+function processAxiosError(error){
+    if (error.response){
+        return(error.response.data);
+    } else if (error.request){
+        return(error.request);
+    } else {
+        return(error.message);
+    }
+}
+
 var getTenant = function(tenant){
     return new Promise(function(resolve, reject) {
 
@@ -86,6 +98,27 @@ var initiateAuth = function(cognito_client_id, username, password){
             resolve(resp);
         })
         .catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+var refreshTokenI = function(cognito_client_id, refreshToken){
+    return new Promise(function(resolve, reject){
+        var url = process.env.AUTH_SERVICE + "/refreshToken";
+        var body = {
+            cognitoClientId: cognito_client_id,
+            refreshToken: refreshToken
+        };
+        var options = {
+            method: 'POST',
+            uri: url,
+            body: body,
+            json: true
+        };
+        rp(options).then(function(resp){
+             resolve(resp);
+        }).catch(function(err){
             reject(err);
         });
     });
@@ -201,6 +234,18 @@ exports.signin = function(tenant, username, password){
     });
 }
 
+exports.refreshToken = function(tenant, refreshToken){
+    return new Promise(function(resolve, reject){
+        getTenant(tenant)
+        .then(resp => refreshTokenI(resp.cognito_client_id, refreshToken))
+        .then(function(result){
+            resolve(result);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
 exports.forgotPassword = function(tenant, username){
     return new Promise(function(resolve, reject){
         getTenant(tenant)
@@ -282,6 +327,30 @@ function getClientToken(IdToken, cognito_client_id, cognito_pool_id){
             "Authorization" : bearerToken
         };
         var options = {
+            url: url,
+            method: 'GET',
+            headers: headers,
+            json: true
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            var retErr = processAxiosError(err);
+            reject(retErr);
+        });
+    });
+}
+
+function axiosTest(IdToken, cognito_client_id, cognito_pool_id){
+    return new Promise(function(resolve, reject){
+        url = process.env.BILLING_SERVICE + "/axiosTest?" +
+            "cognitoClientId=" + cognito_client_id +
+            "&cognitoPoolId=" + cognito_pool_id;
+        bearerToken = "Bearer " + IdToken;
+        var headers = {
+            "Authorization" : bearerToken
+        };
+        var options = {
             uri: url,
             method: 'GET',
             headers: headers,
@@ -336,6 +405,24 @@ exports.getClientToken = function(tenant, IdToken){
                     resp.cognito_pool_id
                 )
         ).then(function(resp){
+            resolve(resp);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.axiosTest = function(tenant, IdToken){
+    return new Promise(function(resolve, reject){
+        getTenant(tenant)
+        .then(
+            resp =>
+                axiosTest(
+                    IdToken,
+                    resp.cognito_client_id,
+                    resp.cognito_pool_id
+                ))
+        .then(function(resp){
             resolve(resp);
         }).catch(function(err){
             reject(err);
