@@ -289,4 +289,19 @@ app.get('/axiostest',(req, res) => {
         res.status(401).send(err);
     });
 });
+
+app.get('/user/profile', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.getUserProfile(tenant, IdToken).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        if (err.statusCode){
+            res.status(err.statusCode).send(err);
+        } else {
+            res.status(400).send(err);
+        }
+    });
+});
+
 app.listen(PORT, HOST);

@@ -1,22 +1,14 @@
 const rp = require('request-promise');
 const axios = require('axios');
 const vexService = require('./vex');
+const utilities = require('./utilities');
+const userService = require('./user');
 
 Object.prototype.getName = function() { 
    var funcNameRegex = /function (.{1,})\(/;
    var results = (funcNameRegex).exec((this).constructor.toString());
    return (results && results.length > 1) ? results[1] : "";
 };
-
-function processAxiosError(error){
-    if (error.response){
-        return(error.response.data);
-    } else if (error.request){
-        return(error.request);
-    } else {
-        return(error.message);
-    }
-}
 
 var getTenant = function(tenant){
     return new Promise(function(resolve, reject) {
@@ -335,7 +327,7 @@ function getClientToken(IdToken, cognito_client_id, cognito_pool_id){
         axios(options).then(function(result){
             resolve(result.data);
         }).catch(function(err){
-            var retErr = processAxiosError(err);
+            var retErr = utilities.processAxiosError(err);
             reject(retErr);
         });
     });
@@ -452,3 +444,16 @@ exports.deleteUser = function(tenant, email){
         });
     });
 }
+
+exports.getUserProfile = function(tenant, IdToken){
+    return new Promise(function(resolve, reject){
+        getTenant(tenant)
+        .then(resp =>
+            userService.getUserProfile(IdToken, resp.cognito_client_id, resp.cognito_pool_id))
+        .then(function(resp){
+            resolve(resp);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+};
