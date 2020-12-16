@@ -457,3 +457,17 @@ exports.getUserProfile = function(tenant, IdToken){
         });
     });
 };
+
+exports.updateUserProfile = function(tenant, IdToken, id, body){
+    return new Promise(function(resolve, reject){
+        getTenant(tenant)
+        .then(resp =>
+            userService.updateUserProfile(id, body, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
+        .then(function(resp){
+            resolve(resp);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+

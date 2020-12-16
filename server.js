@@ -304,4 +304,18 @@ app.get('/user/profile', (req, res) => {
     });
 });
 
+app.put('/user/profile/:id', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.updateUserProfile(tenant, IdToken, req.params.id, req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        if (err.statusCode){
+            res.status(err.statusCode).send(err);
+        } else {
+            res.status(400).send(err);
+        }
+    });
+});
+
 app.listen(PORT, HOST);
