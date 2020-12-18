@@ -19,6 +19,7 @@ app.use(cors());
 
 function getToken(req){
     var authorization = req.get("Authorization");
+    if (!authorization) return "noAuthorizationHeader";
     var array = authorization.split(" ");
     var token = array[1];
     if (token === "replacewithtoken" || token === "replacwithtoken")
@@ -287,6 +288,20 @@ app.get('/axiostest',(req, res) => {
         res.send(result);
     }).catch(function(err){
         res.status(401).send(err);
+    });
+});
+
+app.get('/users', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.getUsers(tenant, IdToken).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        if (err.statusCode){
+            res.status(err.statusCode).send(err);
+        } else {
+            res.status(400).send(err);
+        }
     });
 });
 

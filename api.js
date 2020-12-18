@@ -445,6 +445,19 @@ exports.deleteUser = function(tenant, email){
     });
 }
 
+exports.getUsers = function(tenant, IdToken){
+    return new Promise(function(resolve, reject){
+        getTenant(tenant)
+        .then(resp =>
+            userService.getUsers(IdToken, resp.cognito_client_id, resp.cognito_pool_id))
+        .then(function(resp){
+            resolve(resp);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+};
+
 exports.getUserProfile = function(tenant, IdToken){
     return new Promise(function(resolve, reject){
         getTenant(tenant)
