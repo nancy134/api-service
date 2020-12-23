@@ -445,6 +445,10 @@ exports.deleteUser = function(tenant, email){
     });
 }
 
+/////////////////////////////////////////////
+//// user-service
+/////////////////////////////////////////////
+
 exports.getUsers = function(tenant, IdToken){
     return new Promise(function(resolve, reject){
         getTenant(tenant)
@@ -458,11 +462,11 @@ exports.getUsers = function(tenant, IdToken){
     });
 };
 
-exports.getUserProfile = function(tenant, IdToken){
+exports.getUserMe = function(tenant, IdToken){
     return new Promise(function(resolve, reject){
         getTenant(tenant)
         .then(resp =>
-            userService.getUserProfile(IdToken, resp.cognito_client_id, resp.cognito_pool_id))
+            userService.getUserMe(IdToken, resp.cognito_client_id, resp.cognito_pool_id))
         .then(function(resp){
             resolve(resp);
         }).catch(function(err){
@@ -471,11 +475,11 @@ exports.getUserProfile = function(tenant, IdToken){
     });
 };
 
-exports.updateUserProfile = function(tenant, IdToken, id, body){
+exports.updateUserMe = function(tenant, IdToken, id, body){
     return new Promise(function(resolve, reject){
         getTenant(tenant)
         .then(resp =>
-            userService.updateUserProfile(id, body, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
+            userService.updateUserMe(id, body, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
         .then(function(resp){
             resolve(resp);
         }).catch(function(err){
@@ -484,3 +488,12 @@ exports.updateUserProfile = function(tenant, IdToken, id, body){
     });
 }
 
+exports.getUserEnums = function(){
+    return new Promise(function(resolve, reject){
+        userService.getUserEnums().then(function(result){
+            resolve(result);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}

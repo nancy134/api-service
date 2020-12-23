@@ -291,6 +291,10 @@ app.get('/axiostest',(req, res) => {
     });
 });
 
+//////////////////////////////
+// user-service
+//////////////////////////////
+
 app.get('/users', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);
@@ -305,10 +309,10 @@ app.get('/users', (req, res) => {
     });
 });
 
-app.get('/user/profile', (req, res) => {
+app.get('/user/me', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);
-    api.getUserProfile(tenant, IdToken).then(function(result){
+    api.getUserMe(tenant, IdToken).then(function(result){
         res.send(result);
     }).catch(function(err){
         if (err.statusCode){
@@ -319,10 +323,23 @@ app.get('/user/profile', (req, res) => {
     });
 });
 
-app.put('/user/profile/:id', (req, res) => {
+app.put('/user/me', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);
-    api.updateUserProfile(tenant, IdToken, req.params.id, req.body).then(function(result){
+    api.updateUserMe(tenant, IdToken, req.params.id, req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        console.log(err);
+        if (err.statusCode){
+            res.status(err.statusCode).send(err);
+        } else {
+            res.status(400).send(err);
+        }
+    });
+});
+
+app.get('/user/enums', (req, res) => {
+    api.getUserEnums().then(function(result){
         res.send(result);
     }).catch(function(err){
         if (err.statusCode){

@@ -6,7 +6,9 @@ exports.getUsers = function(IdToken, cognito_client_id, cognito_pool_id){
         url = process.env.USER_SERVICE + "/users";
         bearerToken = "Bearer " + IdToken;
         var headers = {
-            "Authorization" : bearerToken
+            "Authorization" : bearerToken,
+            "com-sabresw-cognito-client-id": cognito_client_id,
+            "com-sabresw-cognito-pool-id": cognito_pool_id
         };
         var options = {
             url: url,
@@ -22,14 +24,14 @@ exports.getUsers = function(IdToken, cognito_client_id, cognito_pool_id){
     });
 }
 
-exports.getUserProfile = function(IdToken, cognito_client_id, cognito_pool_id){
+exports.getUserMe = function(IdToken, cognito_client_id, cognito_pool_id){
     return new Promise(function(resolve, reject){
-        url = process.env.USER_SERVICE + "/user?" +
-            "cognitoClientId=" + cognito_client_id +
-            "&cognitoPoolId=" + cognito_pool_id;
+        url = process.env.USER_SERVICE + "/user/me";
         bearerToken = "Bearer " + IdToken;
         var headers = {
-            "Authorization" : bearerToken
+            "Authorization" : bearerToken,
+            "com-sabresw-cognito-client-id": cognito_client_id,
+            "com-sabresw-cognito-pool-id": cognito_pool_id 
         };
         var options = {
             url: url,
@@ -45,14 +47,14 @@ exports.getUserProfile = function(IdToken, cognito_client_id, cognito_pool_id){
     });
 }
 
-exports.updateUserProfile = function(id, body, IdToken, cognito_client_id, cognito_pool_id){
+exports.updateUserMe = function(id, body, IdToken, cognito_client_id, cognito_pool_id){
     return new Promise(function(resolve, reject){
-        url = process.env.USER_SERVICE + "/users/" + id;
-        body.cognitoClientId = cognito_client_id;
-        body.cognitoPoolId = cognito_pool_id;
+        url = process.env.USER_SERVICE + "/user/me";
         bearerToken = "Bearer " + IdToken;
         var headers = {
-            "Authorization" : bearerToken
+            "Authorization" : bearerToken,
+            "com-sabresw-cognito-client-id": cognito_client_id,
+            "com-sabresw-cognito-pool-id": cognito_pool_id
         };
         var options = {
             url: url,
@@ -69,4 +71,18 @@ exports.updateUserProfile = function(id, body, IdToken, cognito_client_id, cogni
     });
 }
 
-
+exports.getUserEnums = function(){
+    return new Promise(function(resolve, reject){
+        url = process.env.USER_SERVICE + "/enums";
+        var options = {
+            url: url,
+            method: 'GET'
+        }
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            var retErr = utilities.processAxiosError(err);
+            reject(retErr);
+        });
+    });
+}
