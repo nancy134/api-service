@@ -3,6 +3,7 @@ const axios = require('axios');
 const vexService = require('./vex');
 const utilities = require('./utilities');
 const userService = require('./user');
+const billingService = require('./billing');
 
 Object.prototype.getName = function() { 
    var funcNameRegex = /function (.{1,})\(/;
@@ -262,104 +263,18 @@ exports.confirmForgotPassword = function(tenant, code, password, username){
     });
 }
 
-function createPaymentMethod(IdToken, cognito_client_id, cognito_pool_id, customerData){
-    return new Promise(function(resolve, reject){
-        url = process.env.BILLING_SERVICE+"/paymentMethod";
-        var bearerToken = "Bearer " + IdToken;
-        var headers = {
-            "Authorization" : bearerToken
-        };
-        customerData.cognitoClientId = cognito_client_id;
-        customerData.cognitoPoolId = cognito_pool_id;
-        var options = {
-            uri: url,
-            method: 'POST',
-            headers: headers,
-            json: true,
-            body: customerData
-        };
-        rp(options).then(function(result){
-            resolve(result);
-        }).catch(function(err){
-            reject(err);
-        }); 
-    });
-}
-
-function getPaymentMethod(IdToken, cognito_client_id, cognito_pool_id){
-    return new Promise(function(resolve, reject){
-        url = process.env.BILLING_SERVICE+"/paymentMethod?" +
-            "cognitoClientId=" + cognito_client_id +
-            "&cognitoPoolId=" + cognito_pool_id; 
-        bearerToken = "Bearer " + IdToken;
-        var headers = {
-            "Authorization" : bearerToken
-        };
-        var options = {
-            uri: url,
-            method: 'GET',
-            headers: headers,
-            json: true
-        };
-        rp(options).then(function(result){
-            resolve(result);
-        }).catch(function(err){
-            reject(err);
-        });
-    });
-}
-
-function getClientToken(IdToken, cognito_client_id, cognito_pool_id){
-    return new Promise(function(resolve, reject){
-        url = process.env.BILLING_SERVICE+"/getClientToken?" +
-            "cognitoClientId=" + cognito_client_id +
-            "&cognitoPoolId=" + cognito_pool_id;
-        bearerToken = "Bearer " + IdToken;
-        var headers = {
-            "Authorization" : bearerToken
-        };
-        var options = {
-            url: url,
-            method: 'GET',
-            headers: headers,
-            json: true
-        };
-        axios(options).then(function(result){
-            resolve(result.data);
-        }).catch(function(err){
-            var retErr = utilities.processAxiosError(err);
-            reject(retErr);
-        });
-    });
-}
-
-function axiosTest(IdToken, cognito_client_id, cognito_pool_id){
-    return new Promise(function(resolve, reject){
-        url = process.env.BILLING_SERVICE + "/axiosTest?" +
-            "cognitoClientId=" + cognito_client_id +
-            "&cognitoPoolId=" + cognito_pool_id;
-        bearerToken = "Bearer " + IdToken;
-        var headers = {
-            "Authorization" : bearerToken
-        };
-        var options = {
-            uri: url,
-            method: 'GET',
-            headers: headers,
-            json: true
-        };
-        rp(options).then(function(result){
-            resolve(result);
-        }).catch(function(err){
-            reject(err);
-        });
-    });
-}
+//////////////////////////////
+// billing-service
+//////////////////////////////
 
 exports.createPaymentMethod = function(tenant, IdToken, customerData){
     return new Promise(function(resolve, reject){
         getTenant(tenant)
-        .then(resp => createPaymentMethod(IdToken, resp.cognito_client_id, resp.cognito_pool_id, customerData))
+        .then(resp => billingService.createPaymentMethod(
+             IdToken,
+             resp.cognito_client_id,
+             resp.cognito_pool_id,
+             customerData))
         .then(function(resp){
             resolve(resp);
         }).catch(function(err){
@@ -373,7 +288,7 @@ exports.getPaymentMethod = function(tenant, IdToken){
         getTenant(tenant)
         .then(
             resp =>
-                getPaymentMethod(
+                billingService.getPaymentMethod(
                     IdToken,
                     resp.cognito_client_id,
                     resp.cognito_pool_id
@@ -391,30 +306,12 @@ exports.getClientToken = function(tenant, IdToken){
         getTenant(tenant)
         .then(
             resp =>
-                getClientToken(
+                billingService.getClientToken(
                     IdToken,
                     resp.cognito_client_id,
                     resp.cognito_pool_id
                 )
         ).then(function(resp){
-            resolve(resp);
-        }).catch(function(err){
-            reject(err);
-        });
-    });
-}
-
-exports.axiosTest = function(tenant, IdToken){
-    return new Promise(function(resolve, reject){
-        getTenant(tenant)
-        .then(
-            resp =>
-                axiosTest(
-                    IdToken,
-                    resp.cognito_client_id,
-                    resp.cognito_pool_id
-                ))
-        .then(function(resp){
             resolve(resp);
         }).catch(function(err){
             reject(err);

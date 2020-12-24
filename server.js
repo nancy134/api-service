@@ -247,6 +247,10 @@ app.get('/listings', (req, res) => {
     });
 });
 
+////////////////////////////
+// billing-service
+////////////////////////////
+
 app.get('/billing/getClientToken', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);
@@ -278,16 +282,6 @@ app.get('/billing/paymentMethod', (req, res) => {
         res.send(result);
     }).catch(function(err){
         res.status(500).send(err);
-    });
-});
-
-app.get('/axiostest',(req, res) => {
-    var tenant = getTenantName(req);
-    var IdToken = getToken(req);
-    api.axiosTest(tenant,IdToken).then(function(result){
-        res.send(result);
-    }).catch(function(err){
-        res.status(401).send(err);
     });
 });
 
@@ -329,7 +323,6 @@ app.put('/user/me', (req, res) => {
     api.updateUserMe(tenant, IdToken, req.params.id, req.body).then(function(result){
         res.send(result);
     }).catch(function(err){
-        console.log(err);
         if (err.statusCode){
             res.status(err.statusCode).send(err);
         } else {
