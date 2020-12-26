@@ -35,6 +35,14 @@ function getTenantName(req){
   return tenant;
 }
 
+function errorResponse(res, err){
+    if (err.statusCode){
+        res.status(err.statusCode).send(err);
+    } else {
+        res.status(400).send(err);
+    }
+}
+
 Object.prototype.getName = function() {
    var funcNameRegex = /function (.{1,})\(/;
    var results = (funcNameRegex).exec((this).constructor.toString());
@@ -340,6 +348,26 @@ app.get('/user/enums', (req, res) => {
         } else {
             res.status(400).send(err);
         }
+    });
+});
+
+app.post('/listings/:id/directPublications', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.directPublication(tenant, IdToken, req.params.id).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.delete('/listings/:id/publications', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.unpublish(tenant, IdToken, req.params.id).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
     });
 });
 

@@ -4,6 +4,7 @@ const vexService = require('./vex');
 const utilities = require('./utilities');
 const userService = require('./user');
 const billingService = require('./billing');
+const listingService = require('./listing');
 
 Object.prototype.getName = function() { 
    var funcNameRegex = /function (.{1,})\(/;
@@ -393,4 +394,34 @@ exports.getUserEnums = function(){
             reject(err);
         });
     });
+}
+
+///////////////////////////////////
+// listing-service
+///////////////////////////////////
+
+exports.directPublication = function (tenant, IdToken, id){
+    return new Promise(function(resolve, reject){
+        getTenant(tenant)
+        .then(resp =>
+            listingService.directPublication(id, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
+        .then(function(result){
+            resolve(result);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.unpublish = function(tenant, IdToken, id){
+    return new Promise(function(resolve, reject){
+        getTenant(tenant)
+        .then(resp =>
+            listingService.unpublish(id, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
+        .then(function(result){
+            resolve(result);
+        }).catch(function(err){
+            reject(err);
+        });
+    });           
 }
