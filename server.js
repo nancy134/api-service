@@ -248,13 +248,6 @@ app.get('/testPostConfirm', (req, res) => {
     });
 });
 
-app.get('/listings', (req, res) => {
-    var tenant = getTenantName(req);
-    listingServices.getListings(tenant,req).then(function(result){
-    }).catch(function(err){
-    });
-});
-
 ////////////////////////////
 // billing-service
 ////////////////////////////
@@ -348,6 +341,40 @@ app.get('/user/enums', (req, res) => {
         } else {
             res.status(400).send(err);
         }
+    });
+});
+
+/////////////////////////////////////////
+// listing-service
+/////////////////////////////////////////
+
+app.get('/listings', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.getListings(tenant,IdToken,req.query).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.get('/listings/me', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.getListingsMe(tenant, IdToken, req.query).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.post('/listings', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.createListing(tenant, IdToken, req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
     });
 });
 

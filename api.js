@@ -400,6 +400,45 @@ exports.getUserEnums = function(){
 // listing-service
 ///////////////////////////////////
 
+exports.getListings = function(tenant, IdToken, query){
+    return new Promise(function(resolve, reject){
+        getTenant(tenant)
+        .then(resp =>
+            listingService.getListings(query, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
+        .then(function(result){
+            resolve(result);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.getListingsMe = function(tenant, IdToken, query){
+    return new Promise(function(resolve, reject){
+        getTenant(tenant)
+        .then(resp =>
+            listingService.getListingsMe(query, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
+        .then(function(result){
+            resolve(result);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.createListing = function(tenant, IdToken, body){
+    return new Promise(function(resolve, reject){
+        getTenant(tenant)
+        .then(resp =>
+            listingService.createListing(body, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
+        .then(function(result){
+            resolve(result);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
 exports.directPublication = function (tenant, IdToken, id){
     return new Promise(function(resolve, reject){
         getTenant(tenant)
