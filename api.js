@@ -320,6 +320,29 @@ exports.getClientToken = function(tenant, IdToken){
     });
 }
 
+exports.playBillingEvents = function(tenant, IdToken, id){
+    return new Promise(function(resolve, reject){
+        getTenant(tenant).then(function(resp){
+            billingService.getBillingCycle(IdToken, resp.cognito_client_id, resp.cognito_pool_id, id).then(function(billingCycle){
+                billingService.deleteBillingEvents(IdToken, resp.cognito_client_id, resp.cognito_pool_id, billingCycle.id).then(function(billingEvents){
+                    listingService.billingCyclePlay(billingCycle, IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(playResults){
+                        resolve(playResults);
+                    }).catch(function(err){
+                        reject(err);
+                    });
+                }).catch(function(err){
+                    reject(err);
+                });
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err)
+        });
+    });
+}
+
+
 // Need to add security
 exports.deleteUser = function(tenant, email){
     return new Promise(function(resolve, reject){

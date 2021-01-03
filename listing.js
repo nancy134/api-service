@@ -90,3 +90,22 @@ exports.unpublish = function(id, IdToken, cognito_client_id, cognito_pool_id){
         });
     });
 }
+
+exports.billingCyclePlay = function(body, IdToken, cognito_client_id, cognito_pool_id){
+    return new Promise(function(resolve, reject){
+        url = process.env.LISTING_SERVICE + "/billingCycles/play";
+        var headers = utilities.createHeaders(IdToken, cognito_client_id, cognito_pool_id);
+        var options = {
+            url: url,
+            method: 'POST',
+            data: body,
+            headers: headers
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            var retErr = utilities.processAxiosError(err);
+            reject(retErr);
+        });
+    });
+}
