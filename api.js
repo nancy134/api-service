@@ -342,6 +342,17 @@ exports.playBillingEvents = function(tenant, IdToken, id){
     });
 }
 
+exports.getBillingEvents = function(tenant, IdToken){
+    return new Promise(function(resolve, reject){
+        getTenant(tenant).then(function(resp){
+            billingService.getBillingEvents(IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(billingEvents){
+                resolve(billingEvents);
+            }).catch(function(err){
+                reject(err);
+            });
+        });
+    });
+}
 
 // Need to add security
 exports.deleteUser = function(tenant, email){

@@ -297,6 +297,17 @@ app.get('/billing/billingEvents/play/:id', (req, res) => {
     });
 });
 
+app.get('/billing/billingEvents', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    var id = req.params.id;
+    api.getBillingEvents(tenant, IdToken).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
 //////////////////////////////
 // user-service
 //////////////////////////////
