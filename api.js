@@ -342,14 +342,52 @@ exports.playBillingEvents = function(tenant, IdToken, id){
     });
 }
 
-exports.getBillingEvents = function(tenant, IdToken){
+exports.getBillingCycles = function(tenant, IdToken){
     return new Promise(function(resolve, reject){
         getTenant(tenant).then(function(resp){
-            billingService.getBillingEvents(IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(billingEvents){
+            billingService.getBillingCycles(IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(billingCycles){
+                resolve(billingCycles);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.getBillingEvents = function(tenant, IdToken, id){
+    return new Promise(function(resolve, reject){
+        getTenant(tenant).then(function(resp){
+            billingService.getBillingEvents(
+                IdToken,
+                resp.cognito_client_id,
+                resp.cognito_pool_id,
+                id)
+            .then(function(billingEvents){
                 resolve(billingEvents);
             }).catch(function(err){
                 reject(err);
             });
+        });
+    });
+}
+
+exports.getBillingEventsMe = function(tenant, IdToken, id){
+    return new Promise(function(resolve, reject){
+        getTenant(tenant).then(function(resp){
+            billingService.getBillingEventsMe(
+                IdToken,
+                resp.cognito_client_id,
+                resp.cognito_pool_id,
+                id)
+            .then(function(billingEvents){
+                resolve(billingEvents);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
         });
     });
 }

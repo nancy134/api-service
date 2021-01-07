@@ -297,13 +297,37 @@ app.get('/billing/billingEvents/play/:id', (req, res) => {
     });
 });
 
-app.get('/billing/billingEvents', (req, res) => {
+app.get('/billing/billingCycles', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);
     var id = req.params.id;
-    api.getBillingEvents(tenant, IdToken).then(function(result){
+    api.getBillingCycles(tenant, IdToken).then(function(result){
         res.send(result);
     }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.get('/billing/billingCycles/:id/billingEvents', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    var id = req.params.id;
+    api.getBillingEvents(tenant, IdToken, id).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        console.log(err);
+        errorResponse(res, err);
+    });
+});
+
+app.get('/billing/billingCycles/:id/billingEvents/me', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    var id = req.params.id;
+    api.getBillingEventsMe(tenant, IdToken, id).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        console.log(err);
         errorResponse(res, err);
     });
 });
