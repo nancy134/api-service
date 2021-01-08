@@ -5,6 +5,7 @@ const utilities = require('./utilities');
 const userService = require('./user');
 const billingService = require('./billing');
 const listingService = require('./listing');
+const tenantService = require('./tenant');
 
 Object.prototype.getName = function() { 
    var funcNameRegex = /function (.{1,})\(/;
@@ -12,23 +13,6 @@ Object.prototype.getName = function() {
    return (results && results.length > 1) ? results[1] : "";
 };
 
-var getTenant = function(tenant){
-    return new Promise(function(resolve, reject) {
-
-        url = process.env.TENANT_SERVICE + "/tenant/" +
-            "?name=" + tenant;
-        var options = {
-            uri: url,
-            json: true
-        };
-        rp(options).then(function(resp){
-            resolve(resp);
-        })
-        .catch(function(err){
-            reject(err);
-        });
-    });
-}
 var signUp = function(cognito_client_id, cognito_pool_id, username, password){
     return new Promise(function(resolve, reject){
         var url = process.env.AUTH_SERVICE + "/signUp";
@@ -195,7 +179,7 @@ var postSignin = function(resp, tenant, email){
 
 exports.signup = function(tenant, username, password){
     return new Promise(function(resolve, reject){
-        getTenant(tenant)
+        tenantService.getTenant(tenant)
         .then(resp => signUp(resp.cognito_client_id, resp.cognito_pool_id, username, password))
         .then(function(resp){
             resolve(resp);
@@ -207,7 +191,7 @@ exports.signup = function(tenant, username, password){
 
 exports.confirmSignUp = function(tenant, username, code){
     return new Promise(function(resolve, reject){
-        getTenant(tenant)
+        tenantService.getTenant(tenant)
         .then(resp => confirmSignUp(resp.cognito_client_id, username, code))
         .then(resp => postConfirm(resp, tenant, username))
         .then(resp => resolve(resp))
@@ -217,7 +201,7 @@ exports.confirmSignUp = function(tenant, username, code){
 
 exports.signin = function(tenant, username, password){
     return new Promise(function(resolve, reject){
-        getTenant(tenant)
+        tenantService.getTenant(tenant)
         .then(resp => initiateAuth(resp.cognito_client_id, username, password))
         .then(authResp => postSignin(authResp, tenant, username))
         .then(function(postSigninResp){
@@ -230,7 +214,7 @@ exports.signin = function(tenant, username, password){
 
 exports.refreshToken = function(tenant, refreshToken){
     return new Promise(function(resolve, reject){
-        getTenant(tenant)
+        tenantService.getTenant(tenant)
         .then(resp => refreshTokenI(resp.cognito_client_id, refreshToken))
         .then(function(result){
             resolve(result);
@@ -242,7 +226,7 @@ exports.refreshToken = function(tenant, refreshToken){
 
 exports.forgotPassword = function(tenant, username){
     return new Promise(function(resolve, reject){
-        getTenant(tenant)
+        tenantService.getTenant(tenant)
         .then(resp => forgotPassword(resp.cognito_client_id, username))
         .then(function(forgotPasswordResp){
             resolve(forgotPasswordResp);
@@ -254,7 +238,7 @@ exports.forgotPassword = function(tenant, username){
 
 exports.confirmForgotPassword = function(tenant, code, password, username){
     return new Promise(function(resolve, reject){
-        getTenant(tenant)
+        tenantService.getTenant(tenant)
         .then(resp => confirmForgotPassword(resp.cognito_client_id, code, password, username))
         .then(function(resp){
             resolve(resp);
@@ -270,7 +254,7 @@ exports.confirmForgotPassword = function(tenant, code, password, username){
 
 exports.createPaymentMethod = function(tenant, IdToken, customerData){
     return new Promise(function(resolve, reject){
-        getTenant(tenant)
+        tenantService.getTenant(tenant)
         .then(resp => billingService.createPaymentMethod(
              IdToken,
              resp.cognito_client_id,
@@ -286,7 +270,7 @@ exports.createPaymentMethod = function(tenant, IdToken, customerData){
 
 exports.getPaymentMethod = function(tenant, IdToken){
     return new Promise(function(resolve, reject){
-        getTenant(tenant)
+        tenantService.getTenant(tenant)
         .then(
             resp =>
                 billingService.getPaymentMethod(
@@ -304,7 +288,7 @@ exports.getPaymentMethod = function(tenant, IdToken){
 
 exports.getClientToken = function(tenant, IdToken){
     return new Promise(function(resolve, reject){
-        getTenant(tenant)
+        tenantService.getTenant(tenant)
         .then(
             resp =>
                 billingService.getClientToken(
@@ -322,7 +306,7 @@ exports.getClientToken = function(tenant, IdToken){
 
 exports.playBillingEvents = function(tenant, IdToken, id){
     return new Promise(function(resolve, reject){
-        getTenant(tenant).then(function(resp){
+        tenantService.getTenant(tenant).then(function(resp){
             billingService.getBillingCycle(IdToken, resp.cognito_client_id, resp.cognito_pool_id, id).then(function(billingCycle){
                 billingService.deleteBillingEvents(IdToken, resp.cognito_client_id, resp.cognito_pool_id, billingCycle.id).then(function(billingEvents){
                     listingService.billingCyclePlay(billingCycle, IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(playResults){
@@ -344,7 +328,7 @@ exports.playBillingEvents = function(tenant, IdToken, id){
 
 exports.getBillingCycles = function(tenant, IdToken){
     return new Promise(function(resolve, reject){
-        getTenant(tenant).then(function(resp){
+        tenantService.getTenant(tenant).then(function(resp){
             billingService.getBillingCycles(IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(billingCycles){
                 resolve(billingCycles);
             }).catch(function(err){
@@ -358,7 +342,7 @@ exports.getBillingCycles = function(tenant, IdToken){
 
 exports.getBillingEvents = function(tenant, IdToken, id){
     return new Promise(function(resolve, reject){
-        getTenant(tenant).then(function(resp){
+        tenantService.getTenant(tenant).then(function(resp){
             billingService.getBillingEvents(
                 IdToken,
                 resp.cognito_client_id,
@@ -375,7 +359,7 @@ exports.getBillingEvents = function(tenant, IdToken, id){
 
 exports.getBillingEventsMe = function(tenant, IdToken, id){
     return new Promise(function(resolve, reject){
-        getTenant(tenant).then(function(resp){
+        tenantService.getTenant(tenant).then(function(resp){
             billingService.getBillingEventsMe(
                 IdToken,
                 resp.cognito_client_id,
@@ -395,7 +379,7 @@ exports.getBillingEventsMe = function(tenant, IdToken, id){
 // Need to add security
 exports.deleteUser = function(tenant, email){
     return new Promise(function(resolve, reject){
-        getTenant(tenant).then(function(resp){
+        tenantService.getTenant(tenant).then(function(resp){
             url = process.env.AUTH_SERVICE + "/deleteUser/" +
                 "?email=" + email +
                 "&userPoolId=" + resp.cognito_pool_id;
@@ -421,7 +405,7 @@ exports.deleteUser = function(tenant, email){
 
 exports.getUsers = function(tenant, IdToken){
     return new Promise(function(resolve, reject){
-        getTenant(tenant)
+        tenantService.getTenant(tenant)
         .then(resp =>
             userService.getUsers(IdToken, resp.cognito_client_id, resp.cognito_pool_id))
         .then(function(resp){
@@ -434,7 +418,7 @@ exports.getUsers = function(tenant, IdToken){
 
 exports.getUserMe = function(tenant, IdToken){
     return new Promise(function(resolve, reject){
-        getTenant(tenant)
+        tenantService.getTenant(tenant)
         .then(resp =>
             userService.getUserMe(IdToken, resp.cognito_client_id, resp.cognito_pool_id))
         .then(function(resp){
@@ -447,7 +431,7 @@ exports.getUserMe = function(tenant, IdToken){
 
 exports.updateUserMe = function(tenant, IdToken, id, body){
     return new Promise(function(resolve, reject){
-        getTenant(tenant)
+        tenantService.getTenant(tenant)
         .then(resp =>
             userService.updateUserMe(id, body, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
         .then(function(resp){
@@ -474,7 +458,7 @@ exports.getUserEnums = function(){
 
 exports.getListings = function(tenant, IdToken, query){
     return new Promise(function(resolve, reject){
-        getTenant(tenant)
+        tenantService.getTenant(tenant)
         .then(resp =>
             listingService.getListings(query, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
         .then(function(result){
@@ -487,7 +471,7 @@ exports.getListings = function(tenant, IdToken, query){
 
 exports.getListingsMe = function(tenant, IdToken, query){
     return new Promise(function(resolve, reject){
-        getTenant(tenant)
+        tenantService.getTenant(tenant)
         .then(resp =>
             listingService.getListingsMe(query, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
         .then(function(result){
@@ -500,7 +484,7 @@ exports.getListingsMe = function(tenant, IdToken, query){
 
 exports.createListing = function(tenant, IdToken, body){
     return new Promise(function(resolve, reject){
-        getTenant(tenant)
+        tenantService.getTenant(tenant)
         .then(resp =>
             listingService.createListing(body, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
         .then(function(result){
@@ -513,7 +497,7 @@ exports.createListing = function(tenant, IdToken, body){
 
 exports.directPublication = function (tenant, IdToken, id){
     return new Promise(function(resolve, reject){
-        getTenant(tenant)
+        tenantService.getTenant(tenant)
         .then(resp =>
             listingService.directPublication(id, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
         .then(function(result){
@@ -526,7 +510,7 @@ exports.directPublication = function (tenant, IdToken, id){
 
 exports.unpublish = function(tenant, IdToken, id){
     return new Promise(function(resolve, reject){
-        getTenant(tenant)
+        tenantService.getTenant(tenant)
         .then(resp =>
             listingService.unpublish(id, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
         .then(function(result){

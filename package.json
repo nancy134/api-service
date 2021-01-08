@@ -6,7 +6,8 @@
   "author": "Nancy Piedra <nancy_piedra@yahoo.com>",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "NODE_ENV=test mocha ./test/* --exit"
   },
   "dependencies": {
     "axios": "^0.21.1",
@@ -16,5 +17,11 @@
     "node-fetch": "^2.6.1",
     "request": "^2.88.2",
     "request-promise": "^4.2.6"
+  },
+  "devDependencies": {
+    "axios-mock-adapter": "^1.19.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "mock-express-request": "^0.2.2"
   }
 }

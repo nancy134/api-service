@@ -445,3 +445,5 @@ app.delete('/listings/:id/publications', (req, res) => {
 });
 
 app.listen(PORT, HOST);
+
+module.exports = app;
