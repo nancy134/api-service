@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const tesla = require('./tesla');
 const vexService = require('./vex');
 const cors = require('cors');
-
+const url = require('url');
 // Constants
 const PORT = 8080;
 const HOST = '0.0.0.0';
@@ -397,7 +397,8 @@ app.get('/user/enums', (req, res) => {
 app.get('/listings', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);
-    api.getListings(tenant,IdToken,req.query).then(function(result){
+    var query = url.parse(req.url).query;
+    api.getListings(tenant,IdToken,query).then(function(result){
         res.send(result);
     }).catch(function(err){
         errorResponse(res, err);
@@ -407,7 +408,8 @@ app.get('/listings', (req, res) => {
 app.get('/listings/me', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);
-    api.getListingsMe(tenant, IdToken, req.query).then(function(result){
+    var query = url.parse(req.url).query;
+    api.getListingsMe(tenant, IdToken, query).then(function(result){
         res.send(result);
     }).catch(function(err){
         errorResponse(res, err);
