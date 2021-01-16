@@ -479,11 +479,37 @@ exports.getListings = function(tenant, IdToken, query){
     });
 }
 
+exports.getListingMarkers = function(tenant, IdToken, query){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant)
+        .then(resp =>
+            listingService.getListingMarkers(query, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
+        .then(function(result){
+            resolve(result);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
 exports.getListingsMe = function(tenant, IdToken, query){
     return new Promise(function(resolve, reject){
         tenantService.getTenant(tenant)
         .then(resp =>
             listingService.getListingsMe(query, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
+        .then(function(result){
+            resolve(result);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.getListingMarkersMe = function(tenant, IdToken, query){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant)
+        .then(resp =>
+            listingService.getListingMarkersMe(query, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
         .then(function(result){
             resolve(result);
         }).catch(function(err){

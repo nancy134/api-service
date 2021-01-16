@@ -403,11 +403,33 @@ app.get('/listings', (req, res) => {
     });
 });
 
+app.get('/listingMarkers', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    var query = url.parse(req.url).query;
+    api.getListingMarkers(tenant,IdToken,query).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
 app.get('/listings/me', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);
     var query = url.parse(req.url).query;
     api.getListingsMe(tenant, IdToken, query).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.get('/listingMarkers/me', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    var query = url.parse(req.url).query;
+    api.getListingMarkersMe(tenant, IdToken, query).then(function(result){
         res.send(result);
     }).catch(function(err){
         errorResponse(res, err);
