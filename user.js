@@ -71,6 +71,23 @@ exports.updateUserMe = function(id, body, IdToken, cognito_client_id, cognito_po
     });
 }
 
+exports.getUser = function(id){
+    return new Promise(function(resolve, reject){
+        url = process.env.USER_SERVICE + "/users/" + id;
+        var options = {
+            url: url,
+            method: 'GET'
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            var retErr = utilities.processAxiosError(err);
+            reject(retErr);
+        });
+    });
+
+}
+
 exports.getUserEnums = function(){
     return new Promise(function(resolve, reject){
         url = process.env.USER_SERVICE + "/enums";
