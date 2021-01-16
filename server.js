@@ -315,7 +315,6 @@ app.get('/billing/billingCycles/:id/billingEvents', (req, res) => {
     api.getBillingEvents(tenant, IdToken, id).then(function(result){
         res.send(result);
     }).catch(function(err){
-        console.log(err);
         errorResponse(res, err);
     });
 });
@@ -327,7 +326,6 @@ app.get('/billing/billingCycles/:id/billingEvents/me', (req, res) => {
     api.getBillingEventsMe(tenant, IdToken, id).then(function(result){
         res.send(result);
     }).catch(function(err){
-        console.log(err);
         errorResponse(res, err);
     });
 });
@@ -413,6 +411,20 @@ app.get('/listings/me', (req, res) => {
         res.send(result);
     }).catch(function(err){
         errorResponse(res, err);
+    });
+});
+
+app.get('/listings/:id', (req, res) => {
+    var id = req.params.id;
+    api.getListing(id).then(function(result){
+        api.getUser(result.listing.owner).then(function(owner){
+            result.listing.owner = owner;
+            res.send(result);
+        }).catch(function(err){
+            errorResponse(res,err);
+        });
+    }).catch(function(err){
+        errorResponse(res,err);
     });
 });
 

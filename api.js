@@ -442,6 +442,16 @@ exports.updateUserMe = function(tenant, IdToken, id, body){
     });
 }
 
+exports.getUser = function(id){
+    return new Promise(function(resolve, reject){
+        userService.getUser(id).then(function(result){
+            resolve(result);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
 exports.getUserEnums = function(){
     return new Promise(function(resolve, reject){
         userService.getUserEnums().then(function(result){
@@ -475,6 +485,16 @@ exports.getListingsMe = function(tenant, IdToken, query){
         .then(resp =>
             listingService.getListingsMe(query, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
         .then(function(result){
+            resolve(result);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.getListing = function(id){
+    return new Promise(function(resolve, reject){
+        listingService.getListing(id).then(function(result){
             resolve(result);
         }).catch(function(err){
             reject(err);

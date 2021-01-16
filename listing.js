@@ -36,6 +36,21 @@ exports.getListingsMe = function(query, IdToken, cognito_client_id, cognito_pool
     });
 }
 
+exports.getListing = function(id){
+    return new Promise(function(resolve, reject){
+        var url = process.env.LISTING_SERVICE + "/listings/" + id;
+        var options = {
+            url: url,
+            method: 'GET'
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
 exports.createListing = function(body, IdToken, cognito_client_id, cognito_pool_id){
     return new Promise(function(resolve, reject){
         url = process.env.LISTING_SERVICE+"/listings";
