@@ -425,6 +425,17 @@ app.get('/listings/me', (req, res) => {
     });
 });
 
+app.get('/lists/me', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    var query = url.parse(req.url).query;
+    api.getListsMe(tenant, IdToken, query).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
 app.get('/listingMarkers/me', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);
@@ -455,6 +466,49 @@ app.post('/listings', (req, res) => {
     var IdToken = getToken(req);
     api.createListing(tenant, IdToken, req.body).then(function(result){
         res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.post('/lists/me', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.createListMe(tenant, IdToken, req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.post('/lists/:ListId/listItems/me', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    req.body.ListId = req.params.ListId;
+    api.createListItemMe(tenant, IdToken, req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.get('/lists/:ListId/listItems/me', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    var ListId = req.params.ListId;
+    api.getListItemsMe(tenant, IdToken, ListId).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.delete('/listItems/:ListItemId', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    var ListItemId = req.params.ListItemId;
+    api.deleteListItemMe(tenant, IdToken, ListItemId).then(function(result){
+        res.json(result);
     }).catch(function(err){
         errorResponse(res, err);
     });

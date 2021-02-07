@@ -6,6 +6,8 @@ const userService = require('./user');
 const billingService = require('./billing');
 const listingService = require('./listing');
 const tenantService = require('./tenant');
+const listService = require('./list');
+const listItemService = require('./listItem');
 
 Object.prototype.getName = function() { 
    var funcNameRegex = /function (.{1,})\(/;
@@ -505,6 +507,46 @@ exports.getListingsMe = function(tenant, IdToken, query){
     });
 }
 
+exports.getListsMe = function(tenant, IdToken, query){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant)
+        .then(resp =>
+            listService.getListsMe(query, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
+        .then(function(result){
+            resolve(result);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.getListItemsMe = function(tenant, IdToken, ListId){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant)
+        .then(resp =>
+            listItemService.getListItemsMe(ListId, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
+        .then(function(result){
+            resolve(result);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.deleteListItemMe = function(tenant, IdToken, ListItemId){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant)
+        .then(resp =>
+            listItemService.deleteListItemMe(ListItemId, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
+        .then(function(result){
+            resolve(result);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+
 exports.getListingMarkersMe = function(tenant, IdToken, query){
     return new Promise(function(resolve, reject){
         tenantService.getTenant(tenant)
@@ -541,6 +583,32 @@ exports.createListing = function(tenant, IdToken, body){
     });
 }
 
+exports.createListMe = function(tenant, IdToken, body){
+    return new Promise(function(resolve, reject){
+        tenantservice.getTenant(tenant)
+        .then(resp =>
+            listService.createListMe(body, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
+        .then(function(result){
+            resolve(result);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.createListItemMe = function(tenant, IdToken, body){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant)
+        .then(resp =>
+            listItemService.createListItemMe(body, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
+        .then(function(result){
+            resolve(result);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
 exports.directPublication = function (tenant, IdToken, id){
     return new Promise(function(resolve, reject){
         tenantService.getTenant(tenant)
@@ -565,4 +633,17 @@ exports.unpublish = function(tenant, IdToken, id){
             reject(err);
         });
     });           
+}
+
+exports.createList = function(tenant, IdToken, body){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant)
+        .then(resp => 
+            listService.createList(body, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
+        .then(function(result){
+            resolve(result);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
 }
