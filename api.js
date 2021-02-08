@@ -585,7 +585,7 @@ exports.createListing = function(tenant, IdToken, body){
 
 exports.createListMe = function(tenant, IdToken, body){
     return new Promise(function(resolve, reject){
-        tenantservice.getTenant(tenant)
+        tenantService.getTenant(tenant)
         .then(resp =>
             listService.createListMe(body, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
         .then(function(result){
