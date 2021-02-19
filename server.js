@@ -242,7 +242,7 @@ app.get('/testPostConfirm', (req, res) => {
     var username = req.query.email;
     var postConfirmPromise = vexService.postConfirm(username);
     postConfirmPromise.then(function(results){
-        res.json(results);
+        res.send(results);
     }).catch(function(err){
         res.status(400).json(err);
     });
@@ -476,6 +476,26 @@ app.post('/lists/me', (req, res) => {
     var IdToken = getToken(req);
     api.createListMe(tenant, IdToken, req.body).then(function(result){
         res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.put('/lists/:id', (req,res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.updateListMe(tenant, IdToken, req.params.id, req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.delete('/lists/:id', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.deleteListMe(tenant, IdToken, req.params.id).then(function(result){
+        res.json(result);
     }).catch(function(err){
         errorResponse(res, err);
     });

@@ -546,6 +546,18 @@ exports.deleteListItemMe = function(tenant, IdToken, ListItemId){
     });
 }
 
+exports.deleteListMe = function(tenant, IdToken, id){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant)
+        .then(resp =>
+            listService.deleteListMe(id, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
+        .then(function(result){
+            resolve(result);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
 
 exports.getListingMarkersMe = function(tenant, IdToken, query){
     return new Promise(function(resolve, reject){
@@ -588,6 +600,19 @@ exports.createListMe = function(tenant, IdToken, body){
         tenantService.getTenant(tenant)
         .then(resp =>
             listService.createListMe(body, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
+        .then(function(result){
+            resolve(result);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.updateListMe = function(tenant, IdToken, id, body){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant)
+        .then(resp =>
+            listService.updateListMe(id, body, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
         .then(function(result){
             resolve(result);
         }).catch(function(err){
