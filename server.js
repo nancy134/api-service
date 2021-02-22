@@ -282,7 +282,7 @@ app.get('/billing/paymentMethod', (req, res) => {
     api.getPaymentMethod(tenant, IdToken).then(function(result){
         res.send(result);
     }).catch(function(err){
-        res.status(500).send(err);
+        errorResponse(res, err);
     });
 });
 
