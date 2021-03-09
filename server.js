@@ -554,6 +554,20 @@ app.delete('/listings/:id/publications', (req, res) => {
     });
 });
 
+//////////////////////////////////
+// Mail
+//////////////////////////////////
+
+app.post('/mail/listing/inquiry', (req, res) => {
+   console.log(req.body);
+   api.mailListingInquiry(req.body).then(function(result){
+       res.send(result);
+   }).catch(function(err){
+       console.log(err);
+       res.send(err);
+   });
+});
+
 app.listen(PORT, HOST);
 
 module.exports = app;

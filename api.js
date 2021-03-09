@@ -8,6 +8,7 @@ const listingService = require('./listing');
 const tenantService = require('./tenant');
 const listService = require('./list');
 const listItemService = require('./listItem');
+const mailService = require('./mail');
 
 Object.prototype.getName = function() { 
    var funcNameRegex = /function (.{1,})\(/;
@@ -672,3 +673,32 @@ exports.createList = function(tenant, IdToken, body){
         });
     });
 }
+
+////////////////////////////////
+// mail-service
+////////////////////////////////
+
+exports.mailListingInquiry = function(body){
+    return new Promise(function(resolve, reject){
+        listingService.getListing(body.ListingVersionId).then(function(listing){
+            body.subject =
+                "Inquiry on "+
+                listing.listing.address +
+                " " +
+                listing.listing.city;
+            userService.getUser(listing.listing.owner).then(function(user){
+                body.broker=user.email;
+                mailService.listingInquiry(body).then(function(result){
+                    resolve(result);
+                }).catch(function(err){
+                    reject(err);
+                });
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
