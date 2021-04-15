@@ -308,6 +308,38 @@ app.get('/billing/billingCycles', (req, res) => {
     });
 });
 
+app.get('/billing/promotions', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.getPromotions(tenant, IdToken).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.post('/billing/promotions/:id/codes', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    var id = req.params.id;
+    api.createPromotionCode(tenant, IdToken, id, req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.get('/billing/codes', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    var query = url.parse(req.url).query;
+    api.getCodes(tenant, IdToken, query).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res,err);
+    });
+});
+
 app.get('/billing/billingCycles/:id/billingEvents', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);

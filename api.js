@@ -343,6 +343,48 @@ exports.getBillingCycles = function(tenant, IdToken){
     });
 }
 
+exports.getPromotions = function(tenant, IdToken){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            billingService.getPromotions(IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(promotions){
+                resolve(promotions);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.createPromotionCode = function(tenant, IdToken, promotionId, body){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            billingService.createPromotionCode(IdToken, resp.cognito_client_id, resp.cognito_pool_id, promotionId, body).then(function(userPromotion){
+                resolve(userPromotion);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.getCodes = function(tenant, IdToken, query){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            billingService.getCodes(IdToken, query, resp.cognito_client_id, resp.cognito_pool_id).then(function(codes){
+                resolve(codes);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
 exports.getBillingEvents = function(tenant, IdToken, id){
     return new Promise(function(resolve, reject){
         tenantService.getTenant(tenant).then(function(resp){
