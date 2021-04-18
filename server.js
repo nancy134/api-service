@@ -340,6 +340,29 @@ app.get('/billing/codes', (req, res) => {
     });
 });
 
+app.post('/billing/codes/validate', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    var query = url.parse(req.url).query;
+    api.validatePromoCode(tenant, IdToken, req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        console.log(err);
+        errorResponse(res, err);
+    });
+});
+
+app.get('/billing/users/codes/me', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    var query = url.parse(req.url).query;
+    api.getUserCodeMe(tenant, IdToken).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
 app.get('/billing/billingCycles/:id/billingEvents', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);

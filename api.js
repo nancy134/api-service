@@ -421,6 +421,43 @@ exports.getBillingEventsMe = function(tenant, IdToken, id){
     });
 }
 
+exports.validatePromoCode = function(tenant, IdToken, body){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            billingService.validatePromoCode(
+                IdToken,
+                resp.cognito_client_id,
+                resp.cognito_pool_id,
+                body)
+            .then(function(userCode){
+                resolve(userCode);
+            }).catch(function(err){
+                console.log("err1:");
+                console.log(err);
+                reject(err);
+            });
+        }).catch(function(err){
+            console.log("err2:");
+            console.log(err);
+            reject(err);
+        });
+    });
+}
+
+exports.getUserCodeMe = function(tenant, IdToken){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            billingService.getUserCodeMe(IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(userCode){
+                resolve(userCode);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
 // Need to add security
 exports.deleteUser = function(tenant, email){
     return new Promise(function(resolve, reject){

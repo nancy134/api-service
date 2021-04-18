@@ -231,3 +231,41 @@ exports.deleteBillingEvents = function(IdToken, cognito_client_id, cognito_pool_
         });
     });
 }
+
+exports.validatePromoCode = function(IdToken, cognito_client_id, cognito_pool_id, body){
+    return new Promise(function(resolve, reject){
+        url = process.env.BILLING_SERVICE + "/codes/validate";
+        var headers = utilities.createHeaders(IdToken, cognito_client_id, cognito_pool_id);
+        var options = {
+            url: url,
+            method: "POST",
+            headers: headers,
+            data: body
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            console.log("err4:");
+            console.log(err);
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
+exports.getUserCodeMe = function(IdToken, cognito_client_id, cognito_pool_id){
+    return new Promise(function(resolve, reject){
+        url = process.env.BILLING_SERVICE + "/users/codes/me";
+        var headers =  utilities.createHeaders(IdToken, cognito_client_id, cognito_pool_id);
+        var options = {
+            url: url,
+            method: "GET",
+            headers: headers
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
