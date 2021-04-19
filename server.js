@@ -318,6 +318,16 @@ app.get('/billing/promotions', (req, res) => {
     });
 });
 
+app.post('/billing/promotions', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.createPromotion(tenant, IdToken, req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
 app.post('/billing/promotions/:id/codes', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);

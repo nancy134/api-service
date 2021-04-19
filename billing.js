@@ -142,6 +142,24 @@ exports.getPromotions = function(IdToken, cognito_client_id, cognito_pool_id){
     });
 }
 
+exports.createPromotion = function(IdToken, cognito_client_id, cognito_pool_id, body){
+    return new Promise(function(resolve, reject){
+        url = process.env.BILLING_SERVICE + "/promotions";
+        var headers = utilities.createHeaders(IdToken, cognito_client_id, cognito_pool_id);
+        var options = {
+            url: url,
+            method: 'POST',
+            headers: headers,
+            data: body
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
 exports.createPromotionCode = function(IdToken, cognito_client_id, cognito_pool_id, promotionId, body){
     return new Promise(function(resolve, reject){
         url = process.env.BILLING_SERVICE + "/promotions/"+promotionId+"/codes";
