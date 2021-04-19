@@ -347,7 +347,6 @@ app.post('/billing/codes/validate', (req, res) => {
     api.validatePromoCode(tenant, IdToken, req.body).then(function(result){
         res.send(result);
     }).catch(function(err){
-        console.log(err);
         errorResponse(res, err);
     });
 });

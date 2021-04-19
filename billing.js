@@ -245,8 +245,6 @@ exports.validatePromoCode = function(IdToken, cognito_client_id, cognito_pool_id
         axios(options).then(function(result){
             resolve(result.data);
         }).catch(function(err){
-            console.log("err4:");
-            console.log(err);
             reject(utilities.processAxiosError(err));
         });
     });

@@ -432,13 +432,9 @@ exports.validatePromoCode = function(tenant, IdToken, body){
             .then(function(userCode){
                 resolve(userCode);
             }).catch(function(err){
-                console.log("err1:");
-                console.log(err);
                 reject(err);
             });
         }).catch(function(err){
-            console.log("err2:");
-            console.log(err);
             reject(err);
         });
     });
