@@ -128,6 +128,17 @@ app.post('/confirmSignUp', (req, res) => {
     }); 
 });
 
+app.post('/resendConfirmationCode', (req, res) => {
+    var tenant = getTenantName(req);
+    api.resendConfirmationCode(tenant, req.body.username).then(function(result){
+        res.json(result);
+    }).catch(function(err){
+        var formattederror = formaterror(err);
+        res.status(formattedError.statusCode).send(formattedError);
+    });
+});
+
+
 app.post('/forgotPassword', (req, res) => {
     var tenant = getTenantName(req);
     var forgotPasswordPromise = api.forgotPassword(

@@ -63,6 +63,29 @@ var confirmSignUp = function(cognito_client_id, username, code){
         });
     });
 }
+
+var resendConfirmationCode = function(cognito_client_id, username){
+    return new Promise(function(resolve, reject){
+        var url = process.env.AUTH_SERVICE + "/resendConfirmationCode";
+        var body = {
+            cognitoClientId: cognito_client_id,
+            username: username
+        };
+        var options = {
+            method: 'POST',
+            url: url,
+            body: body,
+            json: true
+        };
+        rp(options).then(function(resp){
+            resolve(resp);
+        }).catch(function(err){
+            reject(err);
+        });
+
+    });
+}
+
 var initiateAuth = function(cognito_client_id, username, password){
     return new Promise(function(resolve, reject){
         var url = process.env.AUTH_SERVICE + "/initiateAuth";
@@ -199,6 +222,15 @@ exports.confirmSignUp = function(tenant, username, code){
         .then(resp => postConfirm(resp, tenant, username))
         .then(resp => resolve(resp))
         .catch(err => reject(err)); 
+    });
+}
+
+exports.resendConfirmationCode = function(tenant, username){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant)
+        .then(resp => resendConfirmationCode(resp.cognito_client_id, username))
+        .then(resp => resolve(resp))
+        .catch(err => reject(err));
     });
 }
 
