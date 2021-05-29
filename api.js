@@ -828,3 +828,22 @@ exports.mailListingInquiry = function(body){
     });
 }
 
+exports.sendAssociationInvite = function(tenant, IdToken, body){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            exports.getUserMe(tenant, IdToken).then(function(user){
+                body.userEmail = user.email; 
+                mailService.sendAssociationInvite(body, IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(result){
+                    resolve(result);
+                }).catch(function(err){
+                    reject(err);
+                });
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+

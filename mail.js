@@ -17,3 +17,22 @@ exports.listingInquiry = function(mailData){
         });
     });
 }
+
+exports.sendAssociationInvite = function(body, IdToken, cognito_client_id, cognito_pool_id){
+    return new Promise(function(resolve, reject){
+        url = process.env.MAIL_SERVICE + "/associations/users/invite";
+        var headers = utilities.createHeaders(IdToken, cognito_client_id, cognito_pool_id);
+        var options = {
+            url: url,
+            method: 'POST',
+            data: body,
+            headers: headers
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+

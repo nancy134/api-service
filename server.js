@@ -630,7 +630,7 @@ app.delete('/listings/:id/publications', (req, res) => {
 });
 
 //////////////////////////////////
-// Mail
+// mail-service
 //////////////////////////////////
 
 app.post('/mail/listing/inquiry', (req, res) => {
@@ -638,6 +638,16 @@ app.post('/mail/listing/inquiry', (req, res) => {
        res.send(result);
    }).catch(function(err){
        res.send(err);
+   });
+});
+
+app.post('/mail/associations/users/invite', (req, res) => {
+   var tenant = getTenantName(req);
+   var IdToken = getToken(req);
+   api.sendAssociationInvite(tenant, IdToken, req.body).then(function(result){
+       res.send(result);
+   }).catch(function(err){
+       errorResponse(res, err);
    });
 });
 
