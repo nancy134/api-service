@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "axios-mock-adapter": "^1.19.0",
-    "chai": "^4.2.0",
+    "chai": "^4.3.4",
     "chai-http": "^4.3.0",
     "mock-express-request": "^0.2.2"
   }
