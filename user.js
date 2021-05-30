@@ -4,12 +4,7 @@ const utilities = require('./utilities');
 exports.getUsers = function(IdToken, cognito_client_id, cognito_pool_id){
     return new Promise(function(resolve, reject){
         url = process.env.USER_SERVICE + "/users";
-        bearerToken = "Bearer " + IdToken;
-        var headers = {
-            "Authorization" : bearerToken,
-            "com-sabresw-cognito-client-id": cognito_client_id,
-            "com-sabresw-cognito-pool-id": cognito_pool_id
-        };
+        var headers = utilities.createHeaders(IdToken, cognito_client_id, cognito_pool_id);
         var options = {
             url: url,
             method: 'GET',
@@ -27,12 +22,7 @@ exports.getUsers = function(IdToken, cognito_client_id, cognito_pool_id){
 exports.getUserMe = function(IdToken, cognito_client_id, cognito_pool_id){
     return new Promise(function(resolve, reject){
         url = process.env.USER_SERVICE + "/user/me";
-        bearerToken = "Bearer " + IdToken;
-        var headers = {
-            "Authorization" : bearerToken,
-            "com-sabresw-cognito-client-id": cognito_client_id,
-            "com-sabresw-cognito-pool-id": cognito_pool_id 
-        };
+        var headers = utilities.createHeaders(IdToken, cognito_client_id, cognito_pool_id);
         var options = {
             url: url,
             method: 'GET',
@@ -50,12 +40,7 @@ exports.getUserMe = function(IdToken, cognito_client_id, cognito_pool_id){
 exports.updateUserMe = function(id, body, IdToken, cognito_client_id, cognito_pool_id){
     return new Promise(function(resolve, reject){
         url = process.env.USER_SERVICE + "/user/me";
-        bearerToken = "Bearer " + IdToken;
-        var headers = {
-            "Authorization" : bearerToken,
-            "com-sabresw-cognito-client-id": cognito_client_id,
-            "com-sabresw-cognito-pool-id": cognito_pool_id
-        };
+        var headers = utilities.createHeaders(IdToken, cognito_client_id, cognito_pool_id);
         var options = {
             url: url,
             method: 'PUT',
@@ -103,3 +88,40 @@ exports.getUserEnums = function(){
         });
     });
 }
+
+exports.inviteUserMe = function(associationId, body, IdToken, cognito_client_id, cognito_pool_id){
+    return new Promise(function(resolve, reject){
+        url = process.env.USER_SERVICE + "/associations/"+associationId+"/users/me";
+        var headers = utilities.createHeaders(IdToken, cognito_client_id, cognito_pool_id);
+        var options = {
+            url: url,
+            method: 'POST',
+            headers: headers,
+            data: body
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
+exports.createAssociationMe = function(body, IdToken, cognito_client_id, cognito_pool_id){
+    return new Promise(function(resolve, reject){
+        url = process.env.USER_SERVICE + "/associations/me";
+        var headers = utilities.createHeaders(IdToken, cognito_client_id, cognito_pool_id);
+        var options = {
+            url: url,
+            method: 'POST',
+            headers: headers,
+            data: body
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
