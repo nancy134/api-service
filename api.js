@@ -828,16 +828,59 @@ exports.mailListingInquiry = function(body){
     });
 }
 
-exports.sendAssociationInvite = function(tenant, IdToken, body){
+exports.inviteAssociate = function(tenant, IdToken, body){
     return new Promise(function(resolve, reject){
         tenantService.getTenant(tenant).then(function(resp){
+            // Get the current user
             exports.getUserMe(tenant, IdToken).then(function(user){
-                body.userEmail = user.email; 
-                mailService.sendAssociationInvite(body, IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(result){
-                    resolve(result);
-                }).catch(function(err){
-                    reject(err);
-                });
+                body.userEmail = user.email;
+
+                // If user has association
+                if (!user.AssociationId){
+                    // Create Association
+                    var associationBody = {
+                        name: body.associationName
+                    };
+                    userService.createAssociationMe(associationBody, IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(association){
+                        // Invite user
+                        // Send Invite
+                        resolve(association);
+                    }).catch(function(err){
+                        reject(err);
+                    });
+
+                // If user does not have association
+                }else{
+                    var userBody = {
+                        email: body.inviteeEmail
+                    };
+                    userService.inviteUserMe(
+                        user.AssociationId,
+                        userBody,
+                        IdToken,
+                        resp.cognito_client_id,
+                        resp.cognito_pool_id
+                    ).then(function(invitedUser){
+                        var mailBody = {
+                            associateEmail: body.inviteeEmail,
+                            userEmail: invitedUser.email,
+                            subject: "FindingCRE associate invite",
+                            message: "You are being invited to become a FindingCRE association"
+                        };
+                        mailService.sendAssociationInvite(
+                            mailBody,
+                            IdToken,
+                            resp.cognito_client_id,
+                            resp.cognito_pool_id
+                        ).then(function(mailResult){
+                            resolve(mailResult);
+                        }).catch(function(err){
+                            reject(err);
+                        });
+                    }).catch(function(err){
+                        reject(err);
+                    });
+                }
             }).catch(function(err){
                 reject(err);
             });

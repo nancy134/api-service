@@ -463,6 +463,16 @@ app.get('/user/enums', (req, res) => {
     });
 });
 
+app.post('/associations/users/invite', (req, res) => {
+   var tenant = getTenantName(req);
+   var IdToken = getToken(req);
+   api.inviteAssociate(tenant, IdToken, req.body).then(function(result){
+       res.send(result);
+   }).catch(function(err){
+       errorResponse(res, err);
+   });
+});
+
 /////////////////////////////////////////
 // listing-service
 /////////////////////////////////////////
@@ -638,16 +648,6 @@ app.post('/mail/listing/inquiry', (req, res) => {
        res.send(result);
    }).catch(function(err){
        res.send(err);
-   });
-});
-
-app.post('/mail/associations/users/invite', (req, res) => {
-   var tenant = getTenantName(req);
-   var IdToken = getToken(req);
-   api.sendAssociationInvite(tenant, IdToken, req.body).then(function(result){
-       res.send(result);
-   }).catch(function(err){
-       errorResponse(res, err);
    });
 });
 
