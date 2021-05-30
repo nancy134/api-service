@@ -842,13 +842,38 @@ exports.inviteAssociate = function(tenant, IdToken, body){
                         name: body.associationName
                     };
                     userService.createAssociationMe(associationBody, IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(association){
-                        // Invite user
-                        // Send Invite
-                        resolve(association);
+                        var userBody = {
+                            email: body.inviteeEmail
+                        };
+                        userService.inviteUserMe(
+                            user.AssociationId,
+                            userBody,
+                            IdToken,
+                            resp.cognito_client_id,
+                            resp.cognito_pool_id
+                        ).then(function(invitedUser){
+                            var mailBody = {
+                                userEmail: user.email,
+                                associateEmail: invitedUser.email,
+                                subject: "FindingCRE associate invite",
+                                message: "You are being invited to become a FindingCRE association"
+                            };
+                            mailService.sendAssociationInvite(
+                                mailBody,
+                                IdToken,
+                                resp.cognito_client_id,
+                                resp.cognito_pool_id
+                            ).then(function(mailResult){
+                                resolve(mailResult);
+                            }).catch(function(err){
+                                reject(err);
+                            });
+                        }).catch(function(err){
+                            reject(err);
+                        });
                     }).catch(function(err){
                         reject(err);
                     });
-
                 // If user does not have association
                 }else{
                     var userBody = {
@@ -862,11 +887,13 @@ exports.inviteAssociate = function(tenant, IdToken, body){
                         resp.cognito_pool_id
                     ).then(function(invitedUser){
                         var mailBody = {
-                            associateEmail: body.inviteeEmail,
-                            userEmail: invitedUser.email,
+                            userEmail: user.email,
+                            associateEmail: invitedUser.email,
                             subject: "FindingCRE associate invite",
                             message: "You are being invited to become a FindingCRE association"
                         };
+                        console.log("mailBody:");
+                        console.log(mailBody);
                         mailService.sendAssociationInvite(
                             mailBody,
                             IdToken,
