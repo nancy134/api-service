@@ -463,6 +463,16 @@ app.get('/user/enums', (req, res) => {
     });
 });
 
+app.get('/associations/me/users', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.getAssociatesMe(tenant, IdToken).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
 app.post('/associations/users/invite', (req, res) => {
    var tenant = getTenantName(req);
    var IdToken = getToken(req);

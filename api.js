@@ -581,6 +581,20 @@ exports.getUser = function(id){
     });
 }
 
+exports.getAssociatesMe = function(tenant, IdToken){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            userService.getAssociatesMe(IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(associations){
+                resolve(associations);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
 exports.getUserEnums = function(){
     return new Promise(function(resolve, reject){
         userService.getUserEnums().then(function(result){
