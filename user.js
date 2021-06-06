@@ -73,6 +73,22 @@ exports.getUser = function(id){
 
 }
 
+exports.userInvite = function(body){
+    return new Promise(function(resolve, reject){
+        url = process.env.USER_SERVICE + "/users/invite";
+        var options = {
+            url: url,
+            method: 'POST',
+            data: body
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
 exports.getUserEnums = function(){
     return new Promise(function(resolve, reject){
         url = process.env.USER_SERVICE + "/enums";

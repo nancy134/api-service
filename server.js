@@ -7,6 +7,8 @@ const tesla = require('./tesla');
 const vexService = require('./vex');
 const cors = require('cors');
 const url = require('url');
+const utilities = require('./utilities');
+
 // Constants
 const PORT = 8080;
 const HOST = '0.0.0.0';
@@ -451,6 +453,16 @@ app.put('/user/me', (req, res) => {
     });
 });
 
+app.post('/users/invite', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.userInvite(req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
 app.get('/user/enums', (req, res) => {
     api.getUserEnums().then(function(result){
         res.send(result);
@@ -476,7 +488,8 @@ app.get('/associations/me/users', (req, res) => {
 app.post('/associations/users/invite', (req, res) => {
    var tenant = getTenantName(req);
    var IdToken = getToken(req);
-   api.inviteAssociate(tenant, IdToken, req.body).then(function(result){
+   var domain = utilities.getDomain(req);
+   api.inviteAssociate(tenant, IdToken, req.body, domain).then(function(result){
        res.send(result);
    }).catch(function(err){
        errorResponse(res, err);

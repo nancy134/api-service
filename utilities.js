@@ -18,3 +18,13 @@ exports.createHeaders = function(IdToken, cognito_client_id, cognito_pool_id){
     return headers;
 }
 
+exports.getDomain = function(req){
+    var host = req.get('host')
+    var parts = host.split(".");
+    var domain = null;
+    if (parts.length > 2){
+        domain = parts[1]+"."+parts[2]; 
+    }
+    return domain;
+}
+
