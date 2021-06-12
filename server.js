@@ -453,10 +453,20 @@ app.put('/user/me', (req, res) => {
     });
 });
 
-app.post('/users/invite', (req, res) => {
+app.get('/users/invitations', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);
-    api.userInvite(req.body).then(function(result){
+    api.getUserInvite(req.query.token).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.put('/users/invitations', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.acceptInvite(tenant, IdToken, req.body).then(function(result){
         res.send(result);
     }).catch(function(err){
         errorResponse(res, err);

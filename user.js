@@ -73,13 +73,30 @@ exports.getUser = function(id){
 
 }
 
-exports.userInvite = function(body){
+exports.getUserInvite = function(token){
     return new Promise(function(resolve, reject){
-        url = process.env.USER_SERVICE + "/users/invite";
+        url = process.env.USER_SERVICE + "/users/invitations?token="+token;
         var options = {
             url: url,
-            method: 'POST',
-            data: body
+            method: 'GET'
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
+exports.acceptInvite = function(IdToken, cognito_client_id, cognito_pool_id, body){
+    return new Promise(function(resolve, reject){
+        url = process.env.USER_SERVICE + "/users/invitations";
+        var headers = utilities.createHeaders(IdToken, cognito_client_id, cognito_pool_id);
+        var options = {
+            url: url,
+            method: 'PUT',
+            data: body,
+            headers: headers
         };
         axios(options).then(function(result){
             resolve(result.data);

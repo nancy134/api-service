@@ -581,10 +581,24 @@ exports.getUser = function(id){
     });
 }
 
-exports.userInvite = function(body){
+exports.getUserInvite = function(token){
     return new Promise(function(resolve, reject){
-        userService.userInvite(body).then(function(result){
+        userService.getUserInvite(token).then(function(result){
             resolve(result);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.acceptInvite = function(tenant, IdToken, body){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            userService.acceptInvite(IdToken, resp.cognito_client_id, resp.cognito_pool_id, body).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
         }).catch(function(err){
             reject(err);
         });
