@@ -873,7 +873,6 @@ exports.inviteAssociate = function(tenant, IdToken, body, domain){
             // Get the current user
             exports.getUserMe(tenant, IdToken).then(function(user){
                 body.userEmail = user.email;
-
                 // If user has association
                 if (!user.AssociationId){
                     // Create Association
@@ -885,7 +884,7 @@ exports.inviteAssociate = function(tenant, IdToken, body, domain){
                             email: body.inviteeEmail
                         };
                         userService.inviteUserMe(
-                            user.AssociationId,
+                            association.id,
                             userBody,
                             IdToken,
                             resp.cognito_client_id,
