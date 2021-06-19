@@ -16,14 +16,15 @@ Object.prototype.getName = function() {
    return (results && results.length > 1) ? results[1] : "";
 };
 
-var signUp = function(cognito_client_id, cognito_pool_id, username, password){
+var signUp = function(cognito_client_id, cognito_pool_id, userBody){
     return new Promise(function(resolve, reject){
         var url = process.env.AUTH_SERVICE + "/signUp";
         var body = {
             cognitoClientId: cognito_client_id,
             cognitoPoolId: cognito_pool_id,
-            username: username,
-            password: password
+            username: userBody.username,
+            password: userBody.password,
+            role: userBody.role
         };
         var options = {
             method: 'POST',
@@ -203,10 +204,10 @@ var postSignin = function(resp, tenant, email){
     });
 }
 
-exports.signup = function(tenant, username, password){
+exports.signup = function(tenant, body){
     return new Promise(function(resolve, reject){
         tenantService.getTenant(tenant)
-        .then(resp => signUp(resp.cognito_client_id, resp.cognito_pool_id, username, password))
+        .then(resp => signUp(resp.cognito_client_id, resp.cognito_pool_id, body))
         .then(function(resp){
             resolve(resp);
         }).catch(function(err){
@@ -832,6 +833,20 @@ exports.createList = function(tenant, IdToken, body){
             listService.createList(body, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
         .then(function(result){
             resolve(result);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.addListingUser = function(tenant, IdToken, body){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            listingService.addListingUser(body, IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
         }).catch(function(err){
             reject(err);
         });

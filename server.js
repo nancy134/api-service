@@ -79,8 +79,7 @@ app.post('/signup', (req, res) => {
     var tenant = getTenantName(req);
     var signupPromise = api.signup(
         tenant,
-        req.body.username,
-        req.body.password
+        req.body
     );
     signupPromise.then(function(result){
         res.json(result);
@@ -666,6 +665,16 @@ app.delete('/listings/:id/publications', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);
     api.unpublish(tenant, IdToken, req.params.id).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.post('/listings/users', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.addListingUser(tenant, IdToken, req.body).then(function(result){
         res.send(result);
     }).catch(function(err){
         errorResponse(res, err);
