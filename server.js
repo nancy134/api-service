@@ -458,6 +458,7 @@ app.get('/users/invitations', (req, res) => {
     api.getUserInvite(req.query.token).then(function(result){
         res.send(result);
     }).catch(function(err){
+        console.log(err);
         errorResponse(res, err);
     });
 });
@@ -468,6 +469,7 @@ app.put('/users/invitations', (req, res) => {
     api.acceptInvite(tenant, IdToken, req.body).then(function(result){
         res.send(result);
     }).catch(function(err){
+        console.log(err);
         errorResponse(res, err);
     });
 });
@@ -678,6 +680,16 @@ app.post('/listings/users', (req, res) => {
         res.send(result);
     }).catch(function(err){
         errorResponse(res, err);
+    });
+});
+
+app.delete('/listings/:ListingVersionId/users/:UserId', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.deleteListingUser(tenant, IdToken, req.params.ListingVersionId, req.params.UserId).then(function(result){
+        res.send("ok");
+    }).catch(function(err){
+        errorResponse(res,err);
     });
 });
 

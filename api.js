@@ -853,6 +853,20 @@ exports.addListingUser = function(tenant, IdToken, body){
     });
 }
 
+exports.deleteListingUser = function(tenant, IdToken, listingVersionId, userId){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            listingService.deleteListingUser(listingVersionId, userId, IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
 ////////////////////////////////
 // mail-service
 ////////////////////////////////
