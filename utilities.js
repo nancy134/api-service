@@ -19,11 +19,12 @@ exports.createHeaders = function(IdToken, cognito_client_id, cognito_pool_id){
 }
 
 exports.getDomain = function(req){
-    var host = req.get('host')
-    var parts = host.split(".");
+    var origin = req.headers.origin;
+ 
+    var parts = origin.split("//");
     var domain = null;
-    if (parts.length > 2){
-        domain = parts[1]+"."+parts[2]; 
+    if (parts.length > 1){
+        domain = parts[1]; 
     }
     return domain;
 }

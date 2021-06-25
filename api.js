@@ -921,7 +921,7 @@ exports.inviteAssociate = function(tenant, IdToken, body, domain){
                         ).then(function(invitedUser){
                             inviteMessage += "<html><body>";
                             inviteMessage += "<p>You are invited to join "+body.associationName+" in FindingCRE</p>";
-                            inviteMessage += '<p>Go to <a href="https://local.phowma.com/account?token='+invitedUser.associationToken+'" >Join FindingCRE</a></p>';
+                            inviteMessage += '<p>Go to <a href="https://'+domain+'/account?token='+invitedUser.associationToken+'" >Join FindingCRE</a></p>';
                             inviteMessage += "</body></html>";
                             var mailBody = {
                                 userEmail: user.email,
