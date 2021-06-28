@@ -458,7 +458,6 @@ app.get('/users/invitations', (req, res) => {
     api.getUserInvite(req.query.token).then(function(result){
         res.send(result);
     }).catch(function(err){
-        console.log(err);
         errorResponse(res, err);
     });
 });
@@ -469,7 +468,6 @@ app.put('/users/invitations', (req, res) => {
     api.acceptInvite(tenant, IdToken, req.body).then(function(result){
         res.send(result);
     }).catch(function(err){
-        console.log(err);
         errorResponse(res, err);
     });
 });
@@ -565,13 +563,39 @@ app.get('/listingMarkers/me', (req, res) => {
         errorResponse(res, err);
     });
 });
-
+/*
 app.get('/listings/:id', (req, res) => {
     var id = req.params.id;
     api.getListing(id).then(function(result){
         api.getUser(result.listing.owner).then(function(owner){
             result.listing.owner = owner;
             res.send(result);
+        }).catch(function(err){
+            errorResponse(res,err);
+        });
+    }).catch(function(err){
+        errorResponse(res,err);
+    });
+});
+*/
+app.get('/listings/:id', (req, res) => {
+    var id = req.params.id;
+    api.getListing(id).then(function(result){
+        api.getUser(result.listing.owner).then(function(owner){
+            api.getAssociates(owner.AssociationId).then(function(associates){
+                result.listing.owner = owner;
+                for (var i=0; i<result.listing.users.length; i++){
+                    for (var j=0; j<associates.length; j++){
+                        if (associates[j].email === result.listing.users[i].email){
+                            result.listing.users[i] = associates[j];
+                        }
+                    }
+                }
+                // Add associates information to each user
+                res.send(result);
+            }).catch(function(err){
+                errorResponse(res, err);
+            });
         }).catch(function(err){
             errorResponse(res,err);
         });

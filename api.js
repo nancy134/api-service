@@ -620,6 +620,16 @@ exports.getAssociatesMe = function(tenant, IdToken){
     });
 }
 
+exports.getAssociates = function(associationId){
+    return new Promise(function(resolve, reject){
+        userService.getAssociates(associationId).then(function(associates){
+            resolve(associates);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
 exports.getUserEnums = function(){
     return new Promise(function(resolve, reject){
         userService.getUserEnums().then(function(result){
@@ -901,6 +911,16 @@ exports.inviteAssociate = function(tenant, IdToken, body, domain){
         tenantService.getTenant(tenant).then(function(resp){
             // Get the current user
             exports.getUserMe(tenant, IdToken).then(function(user){
+                if (user.email === body.inviteeEmail){
+                    var ret = {
+                        statusCode: 400,
+                        message: "Cannot invite yourself"
+                    };
+                    reject(ret);
+                  
+                } else {
+
+
                 body.userEmail = user.email;
                 // If user has association
                 if (!user.AssociationId){
@@ -981,6 +1001,7 @@ exports.inviteAssociate = function(tenant, IdToken, body, domain){
                     }).catch(function(err){
                         reject(err);
                     });
+                }
                 }
             }).catch(function(err){
                 reject(err);

@@ -175,3 +175,18 @@ exports.getAssociatesMe = function(IdToken, cognito_client_id, cognito_pool_id){
     });
 }
 
+exports.getAssociates = function(associationId){
+    return new Promise(function(resolve, reject){
+        url = process.env.USER_SERVICE + "/associations/" + associationId + "/users";
+        var options = {
+            url: url,
+            method: 'GET'
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
