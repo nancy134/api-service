@@ -640,6 +640,20 @@ exports.getUserEnums = function(){
     });
 }
 
+exports.removeAssociate = function(tenant, IdToken, associationId, userId){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            userService.removeAssociate(associationId, userId, IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+ 
 ///////////////////////////////////
 // listing-service
 ///////////////////////////////////

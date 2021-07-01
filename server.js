@@ -505,6 +505,16 @@ app.post('/associations/users/invite', (req, res) => {
    });
 });
 
+app.delete('/associations/:associationId/users/:userId', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.removeAssociate(tenant, IdToken, req.params.associationId, req.params.userId).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
 /////////////////////////////////////////
 // listing-service
 /////////////////////////////////////////

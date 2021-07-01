@@ -190,3 +190,19 @@ exports.getAssociates = function(associationId){
     });
 }
 
+exports.removeAssociate = function(associationId, userId, IdToken, cognito_client_id, cognito_pool_id){
+    return new Promise(function(resolve, reject){
+        var url = process.env.USER_SERVICE + "/associations/"+associationId+"/users/"+userId;
+        var headers = utilities.createHeaders(IdToken, cognito_client_id, cognito_pool_id);
+        var options = {
+            url: url,
+            method: 'DELETE',
+            headers: headers
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
