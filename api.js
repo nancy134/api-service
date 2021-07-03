@@ -934,6 +934,13 @@ exports.inviteAssociate = function(tenant, IdToken, body, domain){
                   
                 } else {
 
+                // Get inviter name
+                var inviterName = null;
+                if (user.first && user.last) {
+                    invitername = user.first + " " + user.last;
+                } else {
+                    inviterName = user.email;
+                }
 
                 body.userEmail = user.email;
                 // If user has association
@@ -954,7 +961,7 @@ exports.inviteAssociate = function(tenant, IdToken, body, domain){
                             resp.cognito_pool_id
                         ).then(function(invitedUser){
                             inviteMessage += "<html><body>";
-                            inviteMessage += "<p>You are invited to join "+body.associationName+" in FindingCRE</p>";
+                            inviteMessage += "<p>You are invited to join FindingCRE as an associate of " + inviterName + "</p>";
                             inviteMessage += '<p>Go to <a href="https://'+domain+'/account?token='+invitedUser.associationToken+'" >Join FindingCRE</a></p>';
                             inviteMessage += "</body></html>";
                             var mailBody = {
@@ -992,7 +999,8 @@ exports.inviteAssociate = function(tenant, IdToken, body, domain){
                         resp.cognito_pool_id
                     ).then(function(invitedUser){
                         inviteMessage += "<html><body>";
-                        inviteMessage += "<p>You are invited to join "+body.associationName+" in FindingCRE</p>";
+                        inviteMessage += "<p>You are invited to join FindingCRE as an associate of " + inviterName + "</p>";
+
                         inviteMessage += '<p>Go to <a href="https://local.phowma.com/account?token='+invitedUser.associationToken+'" >Join FindingCRE</a></p>';
                         inviteMessage += "</body></html>";
 
