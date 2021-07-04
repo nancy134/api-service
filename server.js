@@ -505,13 +505,13 @@ app.post('/associations/users/invite', (req, res) => {
    });
 });
 
-app.put('/associations/:associationId/users/:userId/invite', (req, res) => {
+app.put('/associations/:associationId/users/:userId', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);
     var domain = utilities.getDomain(req);
     var associationId = req.params.associationId;
     var userId = req.params.userId;
-    api.resendInvite(tenant, IdToken, associationId, userId).then(function(result){
+    api.resendInvite(tenant, IdToken, domain, associationId, userId).then(function(result){
         res.send(result);
     }).catch(function(err){
         errorResponse(res, err);

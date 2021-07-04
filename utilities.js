@@ -29,3 +29,29 @@ exports.getDomain = function(req){
     return domain;
 }
 
+exports.createAssociationInvite = function(domain, user, invitedUser){
+
+    var inviterName = null;
+    if (user.first && user.last) {
+        invitername = user.first + " " + user.last;
+    } else {
+        inviterName = user.email;
+    }
+
+    var inviteMessage = "";
+    inviteMessage += "<html><body>";
+    inviteMessage += "<p>You are invited to join FindingCRE as an associate of " + inviterName + "</p>";
+    inviteMessage += '<p>Go to <a href="https://'+domain+'/account?token='+invitedUser.associationToken+'" >Join FindingCRE</a></p>';
+    inviteMessage += "</body></html>";
+
+    var mailBody = {
+        userEmail: user.email,
+        associateEmail: invitedUser.email,
+        subject: "FindingCRE associate invite",
+        message: inviteMessage 
+    };
+
+    return mailBody;
+}
+
+

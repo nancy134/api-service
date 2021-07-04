@@ -206,3 +206,22 @@ exports.removeAssociate = function(associationId, userId, IdToken, cognito_clien
         });
     });
 }
+
+// get back associate record
+exports.getAssociate = function(IdToken, cognito_client_id, cognito_pool_id, associationId, userId){
+    return new Promise(function(resolve, reject){
+        var url = process.env.USER_SERVICE + "/associations/"+associationId+"/users/"+userId;
+        var headers = utilities.createHeaders(IdToken, cognito_client_id, cognito_pool_id);
+        var options = {
+            url: url,
+            method: 'GET',
+            headers: headers
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
