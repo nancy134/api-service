@@ -505,6 +505,19 @@ app.post('/associations/users/invite', (req, res) => {
    });
 });
 
+app.put('/associations/:associationId/users/:userId/invite', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    var domain = utilities.getDomain(req);
+    var associationId = req.params.associationId;
+    var userId = req.params.userId;
+    api.resendInvite(tenant, IdToken, associationId, userId).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
 app.delete('/associations/:associationId/users/:userId', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);
@@ -592,20 +605,24 @@ app.get('/listings/:id', (req, res) => {
     var id = req.params.id;
     api.getListing(id).then(function(result){
         api.getUser(result.listing.owner).then(function(owner){
-            api.getAssociates(owner.AssociationId).then(function(associates){
-                result.listing.owner = owner;
-                for (var i=0; i<result.listing.users.length; i++){
-                    for (var j=0; j<associates.length; j++){
-                        if (associates[j].email === result.listing.users[i].email){
-                            result.listing.users[i] = associates[j];
+            if (owner.AssociationId){
+                api.getAssociates(owner.AssociationId).then(function(associates){
+                    result.listing.owner = owner;
+                    for (var i=0; i<result.listing.users.length; i++){
+                        for (var j=0; j<associates.length; j++){
+                            if (associates[j].email === result.listing.users[i].email){
+                                result.listing.users[i] = associates[j];
+                            }
                         }
                     }
-                }
-                // Add associates information to each user
+                    // Add associates information to each user
+                    res.send(result);
+                }).catch(function(err){
+                    errorResponse(res, err);
+                });
+            } else {
                 res.send(result);
-            }).catch(function(err){
-                errorResponse(res, err);
-            });
+            }
         }).catch(function(err){
             errorResponse(res,err);
         });
