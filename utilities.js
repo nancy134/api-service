@@ -30,14 +30,12 @@ exports.getDomain = function(req){
 }
 
 exports.createAssociationInvite = function(domain, user, invitedUser){
-
     var inviterName = null;
     if (user.first && user.last) {
-        invitername = user.first + " " + user.last;
+        inviterName = user.first + " " + user.last;
     } else {
         inviterName = user.email;
     }
-
     var inviteMessage = "";
     inviteMessage += "<html><body>";
     inviteMessage += "<p>You are invited to join FindingCRE as an associate of " + inviterName + "</p>";
