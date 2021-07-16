@@ -533,11 +533,11 @@ exports.deleteUser = function(tenant, email){
 //// user-service
 /////////////////////////////////////////////
 
-exports.getUsers = function(tenant, IdToken){
+exports.getUsers = function(tenant, IdToken,query){
     return new Promise(function(resolve, reject){
         tenantService.getTenant(tenant)
         .then(resp =>
-            userService.getUsers(IdToken, resp.cognito_client_id, resp.cognito_pool_id))
+            userService.getUsers(query, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
         .then(function(resp){
             resolve(resp);
         }).catch(function(err){
@@ -582,9 +582,9 @@ exports.getUser = function(id){
     });
 }
 
-exports.getUserInvite = function(token){
+exports.getUserInvite = function(token, email){
     return new Promise(function(resolve, reject){
-        userService.getUserInvite(token).then(function(result){
+        userService.getUserInvite(token, email).then(function(result){
             resolve(result);
         }).catch(function(err){
             reject(err);

@@ -1,9 +1,12 @@
 const axios = require('axios')
 const utilities = require('./utilities');
 
-exports.getUsers = function(IdToken, cognito_client_id, cognito_pool_id){
+exports.getUsers = function(query, IdToken, cognito_client_id, cognito_pool_id){
     return new Promise(function(resolve, reject){
         url = process.env.USER_SERVICE + "/users";
+        if (query){
+            url = url + "?" + query;
+        }
         var headers = utilities.createHeaders(IdToken, cognito_client_id, cognito_pool_id);
         var options = {
             url: url,
@@ -73,9 +76,13 @@ exports.getUser = function(id){
 
 }
 
-exports.getUserInvite = function(token){
+exports.getUserInvite = function(token, email){
     return new Promise(function(resolve, reject){
         url = process.env.USER_SERVICE + "/users/invitations?token="+token;
+        if (email){
+            url = url + "&email="+email;
+        }
+        console.log("url: "+url);
         var options = {
             url: url,
             method: 'GET'

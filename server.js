@@ -413,7 +413,8 @@ app.get('/billing/billingCycles/:id/billingEvents/me', (req, res) => {
 app.get('/users', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);
-    api.getUsers(tenant, IdToken).then(function(result){
+    var query = url.parse(req.url).query;
+    api.getUsers(tenant, IdToken, query).then(function(result){
         res.send(result);
     }).catch(function(err){
         if (err.statusCode){
@@ -455,7 +456,7 @@ app.put('/user/me', (req, res) => {
 app.get('/users/invitations', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);
-    api.getUserInvite(req.query.token).then(function(result){
+    api.getUserInvite(req.query.token, req.query.email).then(function(result){
         res.send(result);
     }).catch(function(err){
         errorResponse(res, err);
