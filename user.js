@@ -82,7 +82,6 @@ exports.getUserInvite = function(token, email){
         if (email){
             url = url + "&email="+email;
         }
-        console.log("url: "+url);
         var options = {
             url: url,
             method: 'GET'

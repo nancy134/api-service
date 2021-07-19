@@ -37,9 +37,16 @@ exports.createAssociationInvite = function(domain, user, invitedUser){
         inviterName = user.email;
     }
     var inviteMessage = "";
-    inviteMessage += "<html><body>";
-    inviteMessage += "<p>You are invited to join FindingCRE as an associate of " + inviterName + "</p>";
-    inviteMessage += '<p>Go to <a href="https://'+domain+'/account?token='+invitedUser.associationToken+'" >Join FindingCRE</a></p>';
+    inviteMessage += '<html><body>';
+    inviteMessage += '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td align="center">';
+    inviteMessage += '<div style="border:1px solid black; width: 600px; text-align: left; padding: 5px; font-family: Tahoma; font-size: 12pt; font-color: #424242;">';
+    inviteMessage += '<p align="center">You have been invited to join FindingCRE as an associate of ' + inviterName + '</p>';
+    inviteMessage += '<p align="center" style="font-size:14pt"><a href="https://'+domain+'/account?token='+invitedUser.associationToken+'" >Click here to accept your invitation</a></p>';
+    inviteMessage += '<footer><div align="center">';
+    inviteMessage += '<a href="https://www.findingcre.com"><img src="https://sabre-images.s3.amazonaws.com/FindingCRELogo.png" alt="FindingCRE - Commercial Real Estate for Sale or Lease" title="FindingCRE - Commercial Real Estate for Sale or Lease"></a>';
+    inviteMessage += '</div></footer>';
+    inviteMessage += '</div>';
+    inviteMessage += '</td></tr></table>';
     inviteMessage += "</body></html>";
 
     var mailBody = {

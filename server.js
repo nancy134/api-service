@@ -147,8 +147,10 @@ app.post('/forgotPassword', (req, res) => {
         req.body.username
     );
     forgotPasswordPromise.then(function(result){
+        console.log(result);
         res.json(result);
     }).catch(function(err){
+        console.log(err);
         var formattedError = formatError(err);
         res.status(formattedError.statusCode).send(formattedError);
     });
