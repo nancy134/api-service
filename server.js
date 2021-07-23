@@ -568,6 +568,17 @@ app.get('/listings/me', (req, res) => {
     });
 });
 
+app.get('/admin/listingVersions', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    var query = url.parse(req.url).query;
+    api.getAdminListingVersions(tenant, IdToken, query).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
 app.get('/lists/me', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);

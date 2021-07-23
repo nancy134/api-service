@@ -697,6 +697,19 @@ exports.getListingsMe = function(tenant, IdToken, query){
     });
 }
 
+exports.getAdminListingVersions = function(tenant, IdToken, query){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant)
+        .then(resp =>
+            listingService.getAdminListingVersions(query, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
+        .then(function(result){
+            resolve(result);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
 exports.getListsMe = function(tenant, IdToken, query){
     return new Promise(function(resolve, reject){
         tenantService.getTenant(tenant)
