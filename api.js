@@ -322,6 +322,20 @@ exports.getPaymentMethod = function(tenant, IdToken){
     });
 }
 
+exports.getPaymentMethodMe = function(tenant, IdToken){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            billingService.getPaymentMethodMe(IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(intent){
+                resolve(intent);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
 exports.getClientToken = function(tenant, IdToken){
     return new Promise(function(resolve, reject){
         tenantService.getTenant(tenant)
@@ -334,6 +348,39 @@ exports.getClientToken = function(tenant, IdToken){
                 )
         ).then(function(resp){
             resolve(resp);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.getPaymentSecretMe = function(tenant, IdToken){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            // 1. Get user
+            userService.getUserMe(IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(user){
+                // 2. If they have a secret, send back
+                if (user.paymentSecret){
+                    resolve(user);
+                 // 3. If they don't have a secret, create intent
+                } else {
+                    billingService.createPaymentSecret(IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(result){
+                         // 4. Update user with secret
+                         var body = {
+                             paymentSecret: result.client_secret
+                         }
+                         userService.updateUserMe(user.id, body, IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(updatedUser){
+                             resolve(updatedUser);
+                         }).catch(function(err){
+                             reject(err);
+                         });
+                     }).catch(function(err){
+                         reject(err);
+                     });
+                }
+             }).catch(function(err){
+                 reject(err);
+             });
         }).catch(function(err){
             reject(err);
         });

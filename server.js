@@ -147,10 +147,8 @@ app.post('/forgotPassword', (req, res) => {
         req.body.username
     );
     forgotPasswordPromise.then(function(result){
-        console.log(result);
         res.json(result);
     }).catch(function(err){
-        console.log(err);
         var formattedError = formatError(err);
         res.status(formattedError.statusCode).send(formattedError);
     });
@@ -280,6 +278,16 @@ app.get('/billing/getClientToken', (req, res) => {
     });
 });
 
+app.get('/billing/paymentMethod/me', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.getPaymentMethodMe(tenant, IdToken).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res,err);
+    });
+});
+
 app.post('/billing/paymentMethod', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);
@@ -294,6 +302,16 @@ app.get('/billing/paymentMethod', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);
     api.getPaymentMethod(tenant, IdToken).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.get('/billing/paymentSecret/me', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.getPaymentSecretMe(tenant, IdToken).then(function(result){
         res.send(result);
     }).catch(function(err){
         errorResponse(res, err);
