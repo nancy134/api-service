@@ -212,3 +212,73 @@ exports.deleteListingUser = function(listingVersionId, userId, IdToken, cognito_
     });
 }
 
+exports.getTenants = function(listingVersionId, IdToken, cogntio_client_id, cognito_pool_id){
+    return new Promise(function(resolve, reject){
+        url = process.env.LISTING_SERVICE + "/listings/"+listingVersionId+"/tenants";
+        var headers = utilities.createHeaders(IdToken, cognito_client_id, cogntio_pool_id);
+        var options = {
+            url: url,
+            method: 'GET',
+            headers: headers
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
+exports.createTenant = function(listingVersionId, body, IdToken, cognito_client_id, cognito_pool_id){
+    return new Promise(function(resolve, reject){
+        url = process.env.LISTING_SERVICE + "/listings/"+listingVersionId+"/tenants";
+        var headers = utilities.createHeaders(IdToken, cognito_client_id, cognito_pool_id);
+        var options = {
+            url: url,
+            method: 'POST',
+            headers: headers,
+            data: body
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
+exports.updateTenant = function(listingVersionId, tenantId, body, IdToken, cognito_client_id, cognito_pool_id){
+    return new Promise(function(resolve, reject){
+        url = process.env.LISTING_SERVICE + "/listings/"+listingVersionId+"/tenants/"+tenantId;
+        var headers = utilities.createHeaders(IdToken, cognito_client_id, cognito_pool_id);
+        var options = {
+            url: url,
+            method: 'PUT',
+            headers: headers,
+            data: body
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
+exports.deleteTenant = function(listingVersionId, tenantId, IdToken, cognito_client_id, cognito_pool_id){
+    return new Promise(function(resolve, reject){
+        url = process.env.LISTING_SERVICE + "/listings/"+listingVersionId+"/tenants/"+tenantId;
+        var headers = utilities.createHeaders(IdToken, cognito_client_id, cognito_pool_id);
+        var options = {
+            url: url,
+            method: 'DELETE',
+            headers: headers
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+

@@ -776,6 +776,56 @@ app.delete('/listings/:ListingVersionId/users/:UserId', (req, res) => {
     });
 });
 
+app.get('/listings/:listingVersionId/tenants/:tenantId', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.getTenant(tenant, IdToken, req.params.listingVersionId, req.params.tenantId).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res,err);
+    }); 
+});
+
+app.get('/listings/:listingVersionId/tenants', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.getTenants(tenant, IdToken, req.params.listingVersionId).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.post('/listings/:listingVersionId/tenants', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.createTenant(tenant, IdToken, req.params.listingVersionId, req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.put('/listings/:listingVersionId/tenants/:tenantId', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.updateTenant(tenant, IdToken, req.params.listingVersionId, req.params.tenantId, req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.delete('/listings/:listingVersionId/tenants/:tenantId', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.deleteTenant(tenant, IdToken, req.params.listingVersionId, req.params.tenantId).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
 //////////////////////////////////
 // mail-service
 //////////////////////////////////
