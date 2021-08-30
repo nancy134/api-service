@@ -19,9 +19,9 @@ exports.getListings = function(query, IdToken, cognito_client_id, cognito_pool_i
     });
 }
 
-exports.getUserListings = function(query, cognito_client_id, cognito_pool_id){
+exports.getUserListings = function(cognitoId, query, cognito_client_id, cognito_pool_id){
     return new Promise(function(resolve, reject){
-        var url = process.env.LISTING_SERVICE + "/listings?" + query;
+        var url = process.env.LISTING_SERVICE + "/users/" + cognitoId + "/listings?" + query;
         var headers = utilities.createHeaders(null, cognito_client_id, cognito_pool_id);
         var options = {
             url: url,
