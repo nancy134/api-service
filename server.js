@@ -586,6 +586,38 @@ app.get('/listings/me', (req, res) => {
     });
 });
 
+app.get('/listingMarkers/me', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    var query = url.parse(req.url).query;
+    api.getListingMarkersMe(tenant, IdToken, query).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.get('/users/:cognitoId/listings', (req, res) => {
+    var tenant = getTenantName(req);
+    var query = url.parse(req.url).query;
+    api.getUserListings(tenant, req.params.cognitoId, query).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.get('/users/:cognitoId/listingMarkers', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    var query = url.parse(req.url).query;
+    api.getUserListingMarkers(tenant, IdToken, req.params.cognitoId, query).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
 app.get('/admin/listingVersions', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);
@@ -608,16 +640,6 @@ app.get('/lists/me', (req, res) => {
     });
 });
 
-app.get('/listingMarkers/me', (req, res) => {
-    var tenant = getTenantName(req);
-    var IdToken = getToken(req);
-    var query = url.parse(req.url).query;
-    api.getListingMarkersMe(tenant, IdToken, query).then(function(result){
-        res.send(result);
-    }).catch(function(err){
-        errorResponse(res, err);
-    });
-});
 /*
 app.get('/listings/:id', (req, res) => {
     var id = req.params.id;

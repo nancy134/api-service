@@ -718,6 +718,33 @@ exports.getListings = function(tenant, IdToken, query){
     });
 }
 
+exports.getUserListings = function(tenant, cognitoId, query){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            listingService.getUserListings(cognitoId, query, resp.cognito_client_id, resp.cognito_pool_id).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.getListingsMe = function(tenant, IdToken, query){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant)
+        .then(resp =>
+            listingService.getListingsMe(query, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
+        .then(function(result){
+            resolve(result);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
 exports.getListingMarkers = function(tenant, IdToken, query){
     return new Promise(function(resolve, reject){
         tenantService.getTenant(tenant)
@@ -731,11 +758,24 @@ exports.getListingMarkers = function(tenant, IdToken, query){
     });
 }
 
-exports.getListingsMe = function(tenant, IdToken, query){
+exports.getListingMarkersMe = function(tenant, IdToken, query){
     return new Promise(function(resolve, reject){
         tenantService.getTenant(tenant)
         .then(resp =>
-            listingService.getListingsMe(query, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
+            listingService.getListingMarkersMe(query, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
+        .then(function(result){
+            resolve(result);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.getUserListingMarkers = function(tenant, IdToken, cognitoId, query){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant)
+        .then(resp =>
+            listingService.getUserListingMarkers(cognitoId, query, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
         .then(function(result){
             resolve(result);
         }).catch(function(err){
@@ -801,19 +841,6 @@ exports.deleteListMe = function(tenant, IdToken, id){
         tenantService.getTenant(tenant)
         .then(resp =>
             listService.deleteListMe(id, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
-        .then(function(result){
-            resolve(result);
-        }).catch(function(err){
-            reject(err);
-        });
-    });
-}
-
-exports.getListingMarkersMe = function(tenant, IdToken, query){
-    return new Promise(function(resolve, reject){
-        tenantService.getTenant(tenant)
-        .then(resp =>
-            listingService.getListingMarkersMe(query, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
         .then(function(result){
             resolve(result);
         }).catch(function(err){
