@@ -675,6 +675,12 @@ app.get('/listings/:id', (req, res) => {
                     errorResponse(res, err);
                 });
             } else {
+                result.listing.owner = owner;
+                for (var i=0; i<result.listing.users.length; i++){
+                    if (owner.email === result.listing.users[i].email){
+                        result.listing.users[i] = owner;
+                    }
+                }
                 res.send(result);
             }
         }).catch(function(err){
