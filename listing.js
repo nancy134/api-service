@@ -316,3 +316,73 @@ exports.deleteTenant = function(listingVersionId, tenantId, IdToken, cognito_cli
     });
 }
 
+exports.getCondos = function(listingVersionId, IdToken, cogntio_client_id, cognito_pool_id){
+
+    return new Promise(function(resolve, reject){
+        url = process.env.LISTING_SERVICE + "/listings/"+listingVersionId+"/condos";
+        var headers = utilities.createHeaders(IdToken, cognito_client_id, cogntio_pool_id);
+        var options = {
+            url: url,
+            method: 'GET',
+            headers: headers
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
+exports.createCondo = function(listingVersionId, body, IdToken, cognito_client_id, cognito_pool_id){
+    return new Promise(function(resolve, reject){
+        url = process.env.LISTING_SERVICE + "/listings/"+listingVersionId+"/condos";
+        var headers = utilities.createHeaders(IdToken, cognito_client_id, cognito_pool_id);
+        var options = {
+            url: url,
+            method: 'POST',
+            headers: headers,
+            data: body
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
+exports.updateCondo = function(listingVersionId, condoId, body, IdToken, cognito_client_id, cognito_pool_id){
+    return new Promise(function(resolve, reject){
+        url = process.env.LISTING_SERVICE + "/listings/"+listingVersionId+"/condos/"+condoId;
+        var headers = utilities.createHeaders(IdToken, cognito_client_id, cognito_pool_id);
+        var options = {
+            url: url,
+            method: 'PUT',
+            headers: headers,
+            data: body
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
+exports.deleteCondo = function(listingVersionId, condoId, IdToken, cognito_client_id, cognito_pool_id){
+    return new Promise(function(resolve, reject){
+        url = process.env.LISTING_SERVICE + "/listings/"+listingVersionId+"/condos/"+condoId;
+        var headers = utilities.createHeaders(IdToken, cognito_client_id, cognito_pool_id);
+        var options = {
+            url: url,
+            method: 'DELETE',
+            headers: headers
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}

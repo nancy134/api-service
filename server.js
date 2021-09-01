@@ -854,6 +854,55 @@ app.delete('/listings/:listingVersionId/tenants/:tenantId', (req, res) => {
     });
 });
 
+app.get('/listings/:listingVersionId/condos/:condoId', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.getCondo(tenant, IdToken, req.params.listingVersionId, req.params.condoId).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res,err);
+    }); 
+});
+
+app.get('/listings/:listingVersionId/condos/:condoId', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.getCondo(tenant, IdToken, req.params.listingVersionId, req.params.condoId).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res,err);
+    }); 
+});
+
+app.post('/listings/:listingVersionId/condos', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.createCondo(tenant, IdToken, req.params.listingVersionId, req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.put('/listings/:listingVersionId/condos/:condoId', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.updateCondo(tenant, IdToken, req.params.listingVersionId, req.params.condoId, req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.delete('/listings/:listingVersionId/condos/:condoId', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.deleteCondo(tenant, IdToken, req.params.listingVersionId, req.params.condoId).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
 //////////////////////////////////
 // mail-service
 //////////////////////////////////

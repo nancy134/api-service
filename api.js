@@ -1048,6 +1048,75 @@ exports.deleteTenant = function(tenant, IdToken, listingVersionId, tenantId){
     });
 }
 
+exports.getCondo = function(tenant, IdToken, listingVersionId, condoId){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            listingService.getCOndo(listingVersionId, condoId, IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.getCondos = function(tenant, IdToken, listingVersionId){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            listingService.getCOndos(listingVersionId, IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.createCondo = function(tenant, IdToken, listingVersionId, body){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            listingService.createCondo(listingVersionId, body, IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.updateCondo = function(tenant, IdToken, listingVersionId, condoId, body){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            listingService.updateCondo(listingVersionId, condoId, body, IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.deleteCondo = function(tenant, IdToken, listingVersionId, condoId){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            listingService.deleteCondo(listingVersionId, condoId, IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
 ////////////////////////////////
 // mail-service
 ////////////////////////////////
