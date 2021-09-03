@@ -28,7 +28,14 @@ exports.getDomain = function(req){
     }
     return domain;
 }
-
+exports.createAssociateInviteLink = function(domain, invitedUser){
+    var inviteLink = 
+        'https://' +
+        domain +
+        '/account?token=' +
+        invitedUser.associationToken;
+    return inviteLink;
+}
 exports.createAssociationInvite = function(domain, user, invitedUser){
     var inviterName = null;
     if (user.first && user.last) {

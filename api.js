@@ -1179,6 +1179,9 @@ exports.inviteAssociate = function(tenant, IdToken, body, domain){
                             resp.cognito_client_id,
                             resp.cognito_pool_id
                         ).then(function(invitedUser){
+                            var inviteLink = utilities.createAssociateInviteLink(domain, invitedUser);
+                            resolve(inviteLink);
+                            /*
                             var mailBody = utilities.createAssociationInvite(domain, user, invitedUser);
                             mailService.sendAssociationInvite(
                                 mailBody,
@@ -1190,6 +1193,7 @@ exports.inviteAssociate = function(tenant, IdToken, body, domain){
                             }).catch(function(err){
                                 reject(err);
                             });
+                            */
                         }).catch(function(err){
                             reject(err);
                         });
@@ -1208,6 +1212,9 @@ exports.inviteAssociate = function(tenant, IdToken, body, domain){
                         resp.cognito_client_id,
                         resp.cognito_pool_id
                     ).then(function(invitedUser){
+                        var inviteLink = utilities.createAssociateInviteLink(domain, invitedUser);
+                        resolve(inviteLink);
+                        /*
                         var mailBody = utilities.createAssociationInvite(domain, user, invitedUser);
                         mailService.sendAssociationInvite(
                             mailBody,
@@ -1219,6 +1226,7 @@ exports.inviteAssociate = function(tenant, IdToken, body, domain){
                         }).catch(function(err){
                             reject(err);
                         });
+                        */
                     }).catch(function(err){
                         reject(err);
                     });
