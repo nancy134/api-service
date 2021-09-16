@@ -549,6 +549,26 @@ app.delete('/associations/:associationId/users/:userId', (req, res) => {
     });
 });
 
+app.get('/users/me/contacts', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.getContactsMe(tenant, IdToken).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.post('/users/me/contacts', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.createContactsMe(tenant, IdToken, req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
 /////////////////////////////////////////
 // listing-service
 /////////////////////////////////////////
@@ -913,6 +933,16 @@ app.post('/mail/listing/inquiry', (req, res) => {
    }).catch(function(err){
        res.send(err);
    });
+});
+
+app.post('/mail/sendListing', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.mailSendListing(tenant, IdToken, req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(err);
+    });
 });
 
 app.listen(PORT, HOST);

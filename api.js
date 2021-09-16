@@ -700,6 +700,34 @@ exports.removeAssociate = function(tenant, IdToken, associationId, userId){
         });
     });
 }
+
+exports.getContactsMe = function(tenant, IdToken){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            userService.getContactsMe(IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.createContactsMe = function(tenant, IdToken, body){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            userService.createContactsMe(body, IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
  
 ///////////////////////////////////
 // listing-service
@@ -1269,6 +1297,20 @@ exports.resendInvite = function(tenant, IdToken, domain, associationId, userId){
                 }).catch(function(err){
                     reject(err);
                 });
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.mailSendListing = function(tenant, IdToken, body){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            mailService.sendListing(body, IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(result){
+                resolve(result);
             }).catch(function(err){
                 reject(err);
             });
