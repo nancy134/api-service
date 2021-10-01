@@ -9,6 +9,8 @@ const tenantService = require('./tenant');
 const listService = require('./list');
 const listItemService = require('./listItem');
 const mailService = require('./mail');
+const authService = require('./auth');
+const constantService = require('./constant');
 
 Object.prototype.getName = function() { 
    var funcNameRegex = /function (.{1,})\(/;
@@ -278,6 +280,99 @@ exports.confirmForgotPassword = function(tenant, code, password, username){
         .then(resp => confirmForgotPassword(resp.cognito_client_id, code, password, username))
         .then(function(resp){
             resolve(resp);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.getCCAuthUrl = function(tenant, IdToken){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            authService.getCCAuthUrl(
+                IdToken,
+                resp.cognito_client_id,
+                resp.cognito_pool_id,
+                resp.constantContactClientId)
+            .then(function(ccAuthUrl){
+                resolve(ccAuthUrl);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.getCCAuthToken = function(tenant, IdToken, query){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            query = query + "&clientId=" + resp.constantContactClientId;
+            authService.getCCAuthToken(
+                IdToken,
+                resp.cognito_client_id,
+                resp.cognito_pool_id,
+                query)
+            .then(function(ccAuthToken){
+                resolve(ccAuthToken);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        }); 
+    });
+}
+
+exports.ccRefreshToken = function(tenant, IdToken, query){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            query = query + "&clientId=" + resp.constantContactClientId;
+            authService.ccRefreshToken(
+                IdToken,
+                resp.cognito_client_id,
+                resp.cognito_pool_id,
+                query)
+            .then(function(ccRefreshToken){
+                resolve(ccRefreshToken);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+//////////////////////////////
+// constant-service
+//////////////////////////////
+
+exports.createCampaign = function(body){
+    return new Promise(function(resolve, reject){
+        constantService.createCampaign(body).then(function(campaign){
+            resolve(campaign);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.updateCampaign = function(campaignId, body){
+    return new Promise(function(resolve, reject){
+        constantService.updateCampaign(campaignId, body).then(function(campaign){
+            resolve(campaign);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.tokenInfo = function(body){
+    return new Promise(function(resolve, reject){
+        constantService.tokenInfo(body).then(function(result){
+            resolve(result);
         }).catch(function(err){
             reject(err);
         });

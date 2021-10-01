@@ -75,6 +75,10 @@ app.get('/', (req, res) => {
   res.send('api-service.phowma.com\n');
 });
 
+////////////////////////////////////
+// auth-service
+///////////////////////////////////
+
 app.post('/signup', (req, res) => {
     var tenant = getTenantName(req);
     var signupPromise = api.signup(
@@ -201,6 +205,38 @@ app.get('/vehicles', (req, res) => {
     });
 });
 
+app.get('/cc/authurl', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.getCCAuthUrl(tenant, IdToken).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res,err);
+    });
+});
+
+app.get('/cc/authToken', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    var query = url.parse(req.url).query;
+    api.getCCAuthToken(tenant, IdToken, query).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.get('/cc/refreshToken', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    var query = url.parse(req.url).query;
+    api.ccRefreshToken(tenant, IdToken, query).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
 // This is temporary to make sure internal api works
 app.get('/vexAuth', (req, res) => {
     var vexAuthPromise = vexService.getAuthToken(process.env.VEX_AUTH_USERNAME, process.env.VEX_AUTH_PASSWORD);
@@ -210,6 +246,8 @@ app.get('/vexAuth', (req, res) => {
         res.status(400).json(err);
     });
 });
+
+
 // This is temporary to make ure internal api works
 app.get('/testCreateStore', (req, res) => {
     var body = {
@@ -257,6 +295,34 @@ app.get('/testPostConfirm', (req, res) => {
         res.send(results);
     }).catch(function(err){
         res.status(400).json(err);
+    });
+});
+////////////////////////////
+// constant-service
+////////////////////////////
+
+app.post('/cc/emails', (req, res) => {
+    api.createCampaign(req.body).then(function(campaign){
+        res.send(campaign);
+    }).catch(function(err){
+        res.status(400).send(err);
+    });
+});
+
+app.put('/cc/emails/:campaignId', (req, res) => {
+    api.updateCampaign(req.params.campaignId, req.body).then(function(campaign){
+        res.send(campaign);
+    }).catch(function(err){
+        console.log(err);
+        res.status(400).send(err);
+    });
+});
+
+app.post('/cc/tokeninfo', (req, res) => {
+    api.tokenInfo(req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
     });
 });
 
