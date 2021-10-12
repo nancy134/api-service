@@ -237,6 +237,29 @@ app.get('/cc/refreshToken', (req, res) => {
     });
 });
 
+app.get('/spark/authurl', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.getSparkAuthUrl(tenant, IdToken).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        console.log(err);
+        errorResponse(res,err);
+    });
+});
+
+app.post('/spark/authToken', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    console.log(req.body);
+    api.getSparkAuthToken(tenant, IdToken, req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        console.log(err);
+        errorResponse(res, err);
+    });
+});
+
 // This is temporary to make sure internal api works
 app.get('/vexAuth', (req, res) => {
     var vexAuthPromise = vexService.getAuthToken(process.env.VEX_AUTH_USERNAME, process.env.VEX_AUTH_PASSWORD);
@@ -989,6 +1012,7 @@ app.delete('/listings/:listingVersionId/condos/:condoId', (req, res) => {
         errorResponse(res, err);
     });
 });
+
 //////////////////////////////////
 // mail-service
 //////////////////////////////////

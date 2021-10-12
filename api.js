@@ -345,6 +345,45 @@ exports.ccRefreshToken = function(tenant, IdToken, query){
     });
 }
 
+exports.getSparkAuthUrl = function(tenant, IdToken){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            authService.getSparkAuthUrl(
+                IdToken,
+                resp.cognito_client_id,
+                resp.cognito_pool_id,
+                resp.sparkClientId)
+            .then(function(ccAuthUrl){
+                resolve(ccAuthUrl);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.getSparkAuthToken = function(tenant, IdToken, body){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            body.clientId = resp.sparkClientId;
+            authService.getSparkAuthToken(
+                IdToken,
+                resp.cognito_client_id,
+                resp.cognito_pool_id,
+                body)
+            .then(function(sparkAuthToken){
+                resolve(sparkAuthToken);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
 //////////////////////////////
 // constant-service
 //////////////////////////////
@@ -1240,6 +1279,7 @@ exports.deleteCondo = function(tenant, IdToken, listingVersionId, condoId){
         });
     });
 }
+
 ////////////////////////////////
 // mail-service
 ////////////////////////////////
