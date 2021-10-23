@@ -18,6 +18,14 @@ exports.createHeaders = function(IdToken, cognito_client_id, cognito_pool_id){
     return headers;
 }
 
+exports.createSparkHeaders = function(accessToken){
+    var bearerToken = "Bearer " + accessToken;
+    var headers = {
+        "Authorization" : bearerToken
+    };
+    return headers;
+}
+
 exports.getDomain = function(req){
     var origin = req.headers.origin;
  

@@ -38,7 +38,7 @@ function getTenantName(req){
 }
 
 function errorResponse(res, err){
-    if (err.statusCode){
+    if (err && err.statusCode){
         res.status(err.statusCode).send(err);
     } else {
         res.status(400).send(err);
@@ -1031,7 +1031,62 @@ app.post('/mail/sendListing', (req, res) => {
     api.mailSendListing(tenant, IdToken, req.body).then(function(result){
         res.send(result);
     }).catch(function(err){
-        errorResponse(err);
+        errorResponse(res, err);
+    });
+});
+
+//////////////////////////////////
+// spark-service
+//////////////////////////////////
+
+app.get('/spark/collections', (req, res) => {
+    var tenant = getTenantName(req);
+    var sparkAccessToken = getToken(req);
+    api.getCollections(tenant, sparkAccessToken).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.get('/spark/collections/:id', (req, res) => {
+    var tenant = getTenantName(req);
+    var sparkAccessToken = getToken(req);
+    api.getCollection(tenant, sparkAccessToken, req.params.id).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.post('/spark/collectionListings/', (req, res) => {
+    var tenant = getTenantName(req);
+    var sparkAccessToken = getToken(req);
+    api.getCollectionListings(tenant, sparkAccessToken, req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.get('/spark/system', (req, res) => {
+    var tenant = getTenantName(req);
+    var sparkAccessToken = getToken(req);
+    console.log(sparkAccessToken);
+    api.getSystem(tenant, sparkAccessToken).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.get('/spark/savedsearches', (req, res) => {
+    var tenant = getTenantName(req);
+    var sparkAccessToken = getToken(req);
+    api.getSavedSearches(tenant, sparkAccessToken).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
     });
 });
 
