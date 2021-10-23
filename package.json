@@ -10,16 +10,16 @@
     "test": "NODE_ENV=test mocha ./test/* --exit"
   },
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.23.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^2.6.5",
     "request": "^2.88.2",
     "request-promise": "^4.2.6"
   },
   "devDependencies": {
-    "axios-mock-adapter": "^1.19.0",
+    "axios-mock-adapter": "^1.20.0",
     "chai": "^4.3.4",
     "chai-http": "^4.3.0",
     "mock-express-request": "^0.2.2"
