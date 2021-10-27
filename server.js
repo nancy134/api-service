@@ -8,7 +8,8 @@ const vexService = require('./vex');
 const cors = require('cors');
 const url = require('url');
 const utilities = require('./utilities');
-
+const multer = require('multer');
+const upload = multer({dest: 'uploads/'});
 // Constants
 const PORT = 8080;
 const HOST = '0.0.0.0';
@@ -1084,6 +1085,55 @@ app.get('/spark/savedsearches', (req, res) => {
     var tenant = getTenantName(req);
     var sparkAccessToken = getToken(req);
     api.getSavedSearches(tenant, sparkAccessToken).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.get('/spark/listings', (req, res) => {
+    var tenant =  getTenantName(req);
+    var sparkAccessToken = getToken(req);
+    var query = url.parse(req.url).query;
+    api.getListings(tenant, sparkAccessToken, query).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        console.log(err);
+        errorResponse(res, err);
+    });
+});
+
+//////////////////////////////////
+// image-service
+//////////////////////////////////
+
+app.get('/library/images', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    var query = url.parse(req.url).query;
+    api.getImages(tenant, IdToken, query).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.delete('/library/images/:id', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.deleteImage(tenant, IdToken, req.params.id).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        console.log(err);
+        errorResponse(res, err);
+    });
+});
+
+app.post('/library/upload', upload.single('image'), function(req, res, next){
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+
+    api.libraryUpload(tenant, IdToken, req.file, req.body).then(function(result){
         res.send(result);
     }).catch(function(err){
         errorResponse(res, err);

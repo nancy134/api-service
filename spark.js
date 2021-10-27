@@ -87,3 +87,23 @@ exports.getSavedSearches = function(accessToken){
     });
 }
 
+exports.getListings = function(accessToken, query){
+    return new Promise(function(resolve, reject){
+        var url = process.env.SPARK_SERVICE + "/listings";
+        var headers = utilities.createSparkHeaders(accessToken);
+        if (query){
+            url += "?" + query;
+        }
+        var options = {
+            url: url,
+            method: 'GET',
+            headers
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+

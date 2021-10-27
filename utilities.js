@@ -7,14 +7,33 @@ exports.processAxiosError = function(error){
         return(error.message);
     }
 }
+exports.getAuthParams = function(IdToken, tenantResp){
+    var authParams = {
+        IdToken: IdToken,
+        cognitoClientId: tenantResp.cognito_client_id,
+        cognitoPoolId: tenantResp.cognito_pool_id
+    }
+    return authParams;
+}
 
-exports.createHeaders = function(IdToken, cognito_client_id, cognito_pool_id){
+exports.createHeaders = function(IdToken, cognito_client_id, cognito_pool_id, data){
     var bearerToken = "Bearer " + IdToken;
-    var headers = {
-        "Authorization" : bearerToken,
-        "com-sabresw-cognito-client-id": cognito_client_id,
-        "com-sabresw-cognito-pool-id": cognito_pool_id
-    };
+    var headers = {};
+    if (data){
+        headers = {
+            "Authorization" : bearerToken,
+            "com-sabresw-cognito-client-id": cognito_client_id,
+            "com-sabresw-cognito-pool-id": cognito_pool_id,
+            ...data.getHeaders()
+        };
+
+    } else { 
+        headers = {
+            "Authorization" : bearerToken,
+            "com-sabresw-cognito-client-id": cognito_client_id,
+            "com-sabresw-cognito-pool-id": cognito_pool_id
+        };
+    }
     return headers;
 }
 

@@ -12,6 +12,7 @@ const mailService = require('./mail');
 const authService = require('./auth');
 const constantService = require('./constant');
 const sparkService = require('./spark');
+const imageService = require('./image');
 
 Object.prototype.getName = function() { 
    var funcNameRegex = /function (.{1,})\(/;
@@ -1520,6 +1521,69 @@ exports.getSavedSearches = function(tenant, accessToken){
     return new Promise(function(resolve, reject){
         tenantService.getTenant(tenant).then(function(resp){
             sparkService.getSavedSearches(accessToken).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.getListings = function(tenant, accessToken, query){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            sparkService.getListings(accessToken, query).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+///////////////////////////////////////
+// image-service
+//////////////////////////////////////
+
+exports.getImages = function(tenant, IdToken, query){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            var authParams = utilities.getAuthParams(IdToken, resp); 
+            imageService.getImages(authParams, query).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.deleteImage = function(tenant, IdToken, id){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            var authParams = utilities.getAuthParams(IdToken, resp);
+            imageService.deleteImage(authParams, id).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.libraryUpload = function(tenant, IdToken, file, body){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            var authParams = utilities.getAuthParams(IdToken, resp);
+            imageService.libraryUpload(authParams, file, body).then(function(result){
                 resolve(result);
             }).catch(function(err){
                 reject(err);
