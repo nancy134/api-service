@@ -244,7 +244,6 @@ app.get('/spark/authurl', (req, res) => {
     api.getSparkAuthUrl(tenant, IdToken).then(function(result){
         res.send(result);
     }).catch(function(err){
-        console.log(err);
         errorResponse(res,err);
     });
 });
@@ -252,11 +251,9 @@ app.get('/spark/authurl', (req, res) => {
 app.post('/spark/authToken', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);
-    console.log(req.body);
     api.getSparkAuthToken(tenant, IdToken, req.body).then(function(result){
         res.send(result);
     }).catch(function(err){
-        console.log(err);
         errorResponse(res, err);
     });
 });
@@ -337,7 +334,6 @@ app.put('/cc/emails/:campaignId', (req, res) => {
     api.updateCampaign(req.params.campaignId, req.body).then(function(campaign){
         res.send(campaign);
     }).catch(function(err){
-        console.log(err);
         res.status(400).send(err);
     });
 });
@@ -1073,7 +1069,6 @@ app.post('/spark/collectionListings/', (req, res) => {
 app.get('/spark/system', (req, res) => {
     var tenant = getTenantName(req);
     var sparkAccessToken = getToken(req);
-    console.log(sparkAccessToken);
     api.getSystem(tenant, sparkAccessToken).then(function(result){
         res.send(result);
     }).catch(function(err){
@@ -1098,7 +1093,6 @@ app.get('/spark/listings', (req, res) => {
     api.getListings(tenant, sparkAccessToken, query).then(function(result){
         res.send(result);
     }).catch(function(err){
-        console.log(err);
         errorResponse(res, err);
     });
 });
@@ -1124,7 +1118,6 @@ app.delete('/library/images/:id', (req, res) => {
     api.deleteImage(tenant, IdToken, req.params.id).then(function(result){
         res.send(result);
     }).catch(function(err){
-        console.log(err);
         errorResponse(res, err);
     });
 });
