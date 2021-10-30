@@ -1531,7 +1531,7 @@ exports.getSavedSearches = function(tenant, accessToken){
     });
 }
 
-exports.getListings = function(tenant, accessToken, query){
+exports.getSparkListings = function(tenant, accessToken, query){
     return new Promise(function(resolve, reject){
         tenantService.getTenant(tenant).then(function(resp){
             sparkService.getListings(accessToken, query).then(function(result){
