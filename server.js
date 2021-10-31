@@ -426,6 +426,26 @@ app.get('/billing/billingCycles', (req, res) => {
     });
 });
 
+app.post('/billing/billingCycles', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.createBillingCycle(tenant, IdToken, req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.delete('/billing/billingCycles/:id', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.deleteBillingCycle(tenant, IdToken, req.params.id).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
 app.get('/billing/promotions', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);
