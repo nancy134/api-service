@@ -446,6 +446,16 @@ app.delete('/billing/billingCycles/:id', (req, res) => {
     });
 });
 
+app.put('/billing/billingCycles/:id', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.deleteBillingCycle(tenant, IdToken, req.params.id, req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
 app.get('/billing/promotions', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);

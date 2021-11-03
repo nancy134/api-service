@@ -587,6 +587,20 @@ exports.deleteBillingCycle = function(tenant, IdToken, id){
     });
 }
 
+exports.updateBillingCycle = function(tenant, IdToken, id, body){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            billingService.deleteBillingCycle(IdToken, resp.cognito_client_id, resp.cognito_pool_id, id, body).then(function(billingCycle){
+                resolve(billingCycle);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
 exports.getPromotions = function(tenant, IdToken){
     return new Promise(function(resolve, reject){
         tenantService.getTenant(tenant).then(function(resp){

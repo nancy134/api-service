@@ -177,6 +177,24 @@ exports.createBillingCycle = function(IdToken, cognito_client_id, cognito_pool_i
     });
 }
 
+exports.updateBillingCycle = function(IdToken, cognito_client_id, cognito_pool_id, id, body){
+    return new Promise(function(resolve, reject){
+        url = process.env.BILLING_SERVICE + "/billingCycles/" + id;
+        var headers = utilities.createHeaders(IdToken, cognito_client_id, cognito_pool_id);
+        var options = {
+            url: url,
+            method: 'PUT',
+            headers: headers,
+            data: body
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
 exports.getPromotions = function(IdToken, cognito_client_id, cognito_pool_id){
     return new Promise(function(resolve, reject){
         url = process.env.BILLING_SERVICE + "/promotions";
