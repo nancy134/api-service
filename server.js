@@ -1120,7 +1120,7 @@ app.get('/spark/listings', (req, res) => {
     var tenant =  getTenantName(req);
     var sparkAccessToken = getToken(req);
     var query = url.parse(req.url).query;
-    api.getListings(tenant, sparkAccessToken, query).then(function(result){
+    api.getSparkListings(tenant, sparkAccessToken, query).then(function(result){
         res.send(result);
     }).catch(function(err){
         errorResponse(res, err);
