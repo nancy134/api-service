@@ -93,4 +93,16 @@ exports.createAssociationInvite = function(domain, user, invitedUser){
     return mailBody;
 }
 
+exports.emailToList = function(users){
+    var emailList = "";
+    if (users && users.length > 0){
+        for (var i=0; i<users.length; i++){
+            emailList += users[i].email;
+            if (i !== (users.length-1)){
+                emailList += ", ";
+            }
 
+        }
+    }
+    return emailList;
+}

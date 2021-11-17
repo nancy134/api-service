@@ -1331,18 +1331,18 @@ exports.deleteCondo = function(tenant, IdToken, listingVersionId, condoId){
 exports.mailListingInquiry = function(body){
     return new Promise(function(resolve, reject){
         listingService.getListing(body.ListingVersionId).then(function(listing){
-            body.subject =
-                "Inquiry on "+
-                listing.listing.address +
-                " " +
-                listing.listing.city;
-            userService.getUser(listing.listing.owner).then(function(user){
-                body.broker=user.email;
-                mailService.listingInquiry(body).then(function(result){
-                    resolve(result);
-                }).catch(function(err){
-                    reject(err);
-                });
+            if (!body.subject){
+                body.subject =
+                    "Regarding "+
+                    listing.listing.address +
+                    " " +
+                    listing.listing.city;
+            }
+            if (!body.toEmail){
+                body.toEmail = utilities.emailToList(listing.listing.users);
+            }
+            mailService.listingInquiry(body).then(function(result){
+                resolve(result);
             }).catch(function(err){
                 reject(err);
             });
