@@ -13,6 +13,7 @@ const authService = require('./auth');
 const constantService = require('./constant');
 const sparkService = require('./spark');
 const imageService = require('./image');
+const stripoService = require('./stripo');
 
 Object.prototype.getName = function() { 
    var funcNameRegex = /function (.{1,})\(/;
@@ -1499,6 +1500,20 @@ exports.mailSendListing = function(tenant, IdToken, body){
     });
 }
 
+exports.createSparkEmailFromTemplate = function(tenant, accessToken, body){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            mailService.createSparkEmail(body).then(function(html){
+                resolve(html);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
 ////////////////////////////////////////
 // spark-service
 ////////////////////////////////////////
@@ -1577,6 +1592,52 @@ exports.getSparkListings = function(tenant, accessToken, query){
     return new Promise(function(resolve, reject){
         tenantService.getTenant(tenant).then(function(resp){
             sparkService.getListings(accessToken, query).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.createSparkEmail = function(tenant, accessToken, id){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            sparkService.createEmail(accessToken,id).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.createSparkEmailData = function(tenant, accessToken, id){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            sparkService.createEmailData(accessToken, id).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+///////////////////////////////////////
+// stripo-service
+///////////////////////////////////////
+
+exports.createStripoEmail = function(tenant, body){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            stripoService.createEmail(body).then(function(result){
                 resolve(result);
             }).catch(function(err){
                 reject(err);

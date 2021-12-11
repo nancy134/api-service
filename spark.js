@@ -97,7 +97,41 @@ exports.getListings = function(accessToken, query){
         var options = {
             url: url,
             method: 'GET',
-            headers
+            headers: headers
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
+exports.createEmail = function(accessToken, id){
+    return new Promise(function(resolve, reject){
+        var url = process.env.SPARK_SERVICE + "/emails/" + id;
+        var headers = utilities.createSparkHeaders(accessToken);
+        var options = {
+            url: url,
+            method: 'POST',
+            headers: headers
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
+exports.createEmailData = function(accessToken, id){
+    return new Promise(function(resolve, reject){
+        var url = process.env.SPARK_SERVICE + "/emails/" + id + "/mustache";
+        var headers = utilities.createSparkHeaders(accessToken);
+        var options = {
+            url: url,
+            method: 'POST',
+            headers: headers
         };
         axios(options).then(function(result){
             resolve(result.data);

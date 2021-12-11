@@ -55,3 +55,19 @@ exports.sendListing = function(body, IdToken, cognito_client_id, cognito_pool_id
     });
 }
 
+exports.createSparkEmail = function(body){
+    return new Promise(function(resolve, reject){
+        var url = process.env.MAIL_SERVICE + "/spark/emails";
+        var options = {
+            url: url,
+            method: 'POST',
+            data: body
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+

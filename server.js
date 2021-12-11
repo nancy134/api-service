@@ -1127,6 +1127,35 @@ app.get('/spark/listings', (req, res) => {
     });
 });
 
+app.post('/spark/emails/:id', (req, res) => {
+    var tenant = getTenantName(req);
+    var sparkAccessToken = getToken(req);
+    api.createSparkEmail(tenant, sparkAccessToken, req.params.id).then(function(result){
+        api.createStripoEmail(tenant, result).then(function(email){
+            res.send(email);
+        }).catch(function(err){
+            res.send("error");
+            //errorResponse(res, err);
+        });
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.post('/spark/emails/:id/mustache', (req, res) => {
+    var tenant = getTenantName(req);
+    var sparkAccessToken = getToken(req);
+    api.createSparkEmailData(tenant, sparkAccessToken, req.params.id).then(function(emailData){
+        api.createSparkEmailFromTemplate(tenant, sparkAccessToken, emailData).then(function(html){
+            res.send(html);
+        }).catch(function(err){
+            errorResponse(res, err);
+        });
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
 //////////////////////////////////
 // image-service
 //////////////////////////////////
