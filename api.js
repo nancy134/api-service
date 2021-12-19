@@ -387,6 +387,45 @@ exports.getSparkAuthToken = function(tenant, IdToken, body){
     });
 }
 
+exports.getSparkLogoutUrl = function(tenant, IdToken){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            authService.getSparkLogoutUrl(
+                IdToken,
+                resp.cognito_client_id,
+                resp.cognito_pool_id,
+                resp.sparkClientId)
+            .then(function(ccAuthUrl){
+                resolve(ccAuthUrl);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.getSparkRefreshToken = function(tenant, IdToken, body){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            body.clientId = resp.sparkClientId;
+            authService.getRefreshAuthToken(
+                IdToken,
+                resp.cognito_client_id,
+                resp.cognito_pool_id,
+                body)
+            .then(function(sparkAuthToken){
+                resolve(sparkAuthToken);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
 //////////////////////////////
 // constant-service
 //////////////////////////////

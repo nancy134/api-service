@@ -10,6 +10,7 @@ const url = require('url');
 const utilities = require('./utilities');
 const multer = require('multer');
 const upload = multer({dest: 'uploads/'});
+const cookieParser = require('cookie-parser');
 // Constants
 const PORT = 8080;
 const HOST = '0.0.0.0';
@@ -18,7 +19,12 @@ const HOST = '0.0.0.0';
 const app = express();
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
-app.use(cors());
+var corsOptions = {
+    origin: "https://local.phowma.com",
+    credentials: true
+}
+app.use(cors(corsOptions));
+app.use(cookieParser());
 
 function getToken(req){
     var authorization = req.get("Authorization");
@@ -73,7 +79,12 @@ function formatError(err){
 }
 
 app.get('/', (req, res) => {
+  console.log("/");
   res.send('api-service.phowma.com\n');
+});
+
+app.get('/api', (req, res) => {
+   res.send('api-service/api\n');
 });
 
 ////////////////////////////////////
@@ -244,6 +255,7 @@ app.get('/spark/authurl', (req, res) => {
     api.getSparkAuthUrl(tenant, IdToken).then(function(result){
         res.send(result);
     }).catch(function(err){
+        console.log(err);
         errorResponse(res,err);
     });
 });
@@ -251,7 +263,40 @@ app.get('/spark/authurl', (req, res) => {
 app.post('/spark/authToken', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);
+    console.log("req.cookies");
+    console.log(req.cookies);
     api.getSparkAuthToken(tenant, IdToken, req.body).then(function(result){
+
+
+        res.cookie('refresh_token', result.refresh_token, {
+            maxAge: 86400 * 1000, // 24 hours
+            secure: true, // cookie must be sent over https / ssl
+            domain: "local.phowma.com"
+        });
+
+
+
+        console.log(result);
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.get('/spark/logouturl', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.getSparkLogoutUrl(tenant, IdToken).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res,err);
+    });
+});
+
+app.post('/spark/refreshToken', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.getSparkRefreshToken(tenant, IdToken, req.body).then(function(result){
         res.send(result);
     }).catch(function(err){
         errorResponse(res, err);
@@ -1107,11 +1152,17 @@ app.get('/spark/system', (req, res) => {
 });
 
 app.get('/spark/savedsearches', (req, res) => {
+    console.log("/spark/savedsearches");
     var tenant = getTenantName(req);
     var sparkAccessToken = getToken(req);
+    console.log("req.cookies:");
+    console.log(req.cookies);
+    console.log("req.signedCookies");
+    console.log(req.signedCookies);
     api.getSavedSearches(tenant, sparkAccessToken).then(function(result){
         res.send(result);
     }).catch(function(err){
+        console.log(err);
         errorResponse(res, err);
     });
 });
