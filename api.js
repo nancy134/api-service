@@ -410,7 +410,7 @@ exports.getSparkRefreshToken = function(tenant, IdToken, body){
     return new Promise(function(resolve, reject){
         tenantService.getTenant(tenant).then(function(resp){
             body.clientId = resp.sparkClientId;
-            authService.getRefreshAuthToken(
+            authService.getSparkRefreshToken(
                 IdToken,
                 resp.cognito_client_id,
                 resp.cognito_pool_id,

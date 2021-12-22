@@ -79,7 +79,6 @@ function formatError(err){
 }
 
 app.get('/', (req, res) => {
-  console.log("/");
   res.send('api-service.phowma.com\n');
 });
 
@@ -252,19 +251,40 @@ app.get('/cc/refreshToken', (req, res) => {
 app.get('/spark/authurl', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);
-    api.getSparkAuthUrl(tenant, IdToken).then(function(result){
-        res.send(result);
-    }).catch(function(err){
-        console.log(err);
-        errorResponse(res,err);
-    });
+
+    if (req.cookies && req.cookies.refresh_token){
+        var body = {
+            refresh_token: req.cookies.refresh_token
+        };
+        api.getSparkRefreshToken(tenant, IdToken, body).then(function(authToken){
+            api.getSparkAuthUrl(tenant, IdToken).then(function(result){
+                var ret = {
+                    authUrl: result,
+                    access_token: authToken.access_token,
+                    refresh_token: authToken.refresh_token
+                };
+                res.send(ret);
+            }).catch(function(err){
+                errorResponse(res, err);
+            });
+        }).catch(function(err){
+            errorResponse(res, err);
+        });
+    } else {
+        api.getSparkAuthUrl(tenant, IdToken).then(function(result){
+            var ret = {
+                authUrl: result
+            };
+            res.send(ret);
+        }).catch(function(err){
+            errorResponse(res,err);
+        });
+    }
 });
 
 app.post('/spark/authToken', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);
-    console.log("req.cookies");
-    console.log(req.cookies);
     api.getSparkAuthToken(tenant, IdToken, req.body).then(function(result){
 
 
@@ -276,7 +296,6 @@ app.post('/spark/authToken', (req, res) => {
 
 
 
-        console.log(result);
         res.send(result);
     }).catch(function(err){
         errorResponse(res, err);
@@ -1152,17 +1171,11 @@ app.get('/spark/system', (req, res) => {
 });
 
 app.get('/spark/savedsearches', (req, res) => {
-    console.log("/spark/savedsearches");
     var tenant = getTenantName(req);
     var sparkAccessToken = getToken(req);
-    console.log("req.cookies:");
-    console.log(req.cookies);
-    console.log("req.signedCookies");
-    console.log(req.signedCookies);
     api.getSavedSearches(tenant, sparkAccessToken).then(function(result){
         res.send(result);
     }).catch(function(err){
-        console.log(err);
         errorResponse(res, err);
     });
 });
