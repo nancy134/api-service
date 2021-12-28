@@ -20,7 +20,13 @@ const app = express();
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 var corsOptions = {
-//    credentials: true
+    origin: [
+        "http://localhost:3000", 
+        "https://www.murbansw.com", 
+        "https://www.sabresw.com",
+        "https://local.phowma.com"
+    ],
+    credentials: true
 }
 app.use(cors(corsOptions));
 app.use(cookieParser());
