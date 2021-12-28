@@ -20,7 +20,7 @@ const app = express();
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 var corsOptions = {
-    credentials: true
+//    credentials: true
 }
 app.use(cors(corsOptions));
 app.use(cookieParser());
