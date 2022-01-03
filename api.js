@@ -430,6 +430,16 @@ exports.getSparkRefreshToken = function(tenant, IdToken, body){
 // constant-service
 //////////////////////////////
 
+exports.getCampaigns = function(accessToken){
+    return new Promise(function(resolve, reject){
+        constantService.getCampaigns(accessToken).then(function(campaigns){
+            resolve(campaigns);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
 exports.createCampaign = function(body){
     return new Promise(function(resolve, reject){
         constantService.createCampaign(body).then(function(campaign){
@@ -1659,6 +1669,34 @@ exports.createSparkEmailData = function(tenant, accessToken, id){
     return new Promise(function(resolve, reject){
         tenantService.getTenant(tenant).then(function(resp){
             sparkService.createEmailData(accessToken, id).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.getSparkAccount = function(tenant, accessToken, id){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            sparkService.getAccount(accessToken, id).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.findConstant = function(tenant, query){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            sparkService.findConstant(query).then(function(result){
                 resolve(result);
             }).catch(function(err){
                 reject(err);

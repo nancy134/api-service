@@ -1,6 +1,23 @@
 const axios = require('axios');
 const utilities = require('./utilities');
 
+exports.getCampaigns = function(accessToken){
+    return new Promise(function(resolve, reject){
+        url = process.env.CONSTANT_SERVICE + "/emails";
+        var headers = utilities.createConstantHeaders(accessToken);
+        var options = {
+            url: url,
+            method: 'GET',
+            headers: headers
+        }
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
 exports.createCampaign = function(body){
     return new Promise(function(resolve, reject){
         url = process.env.CONSTANT_SERVICE + "/cc/emails";

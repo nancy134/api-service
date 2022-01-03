@@ -141,3 +141,35 @@ exports.createEmailData = function(accessToken, id){
     });
 }
 
+exports.getAccount = function(accessToken, id){
+    return new Promise(function(resolve, reject){
+        var url = process.env.SPARK_SERVICE + "/accounts/" + id;
+        var headers = utilities.createSparkHeaders(accessToken);
+        var options = {
+            url: url,
+            method: 'GET',
+            headers: headers
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
+exports.findConstant = function(query){
+    return new Promise(function(resolve, reject){
+        var url = process.env.SPARK_SERVICE + "/constants?" + query;
+        var options = {
+            url: url,
+            method: 'GET'
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+

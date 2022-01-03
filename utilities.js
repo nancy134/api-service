@@ -45,6 +45,14 @@ exports.createSparkHeaders = function(accessToken){
     return headers;
 }
 
+exports.createConstantHeaders = function(accessToken){
+    var bearerToken = "Bearer " + accessToken;
+    var headers = {
+        "Authorization" : bearerToken
+    };
+    return headers;
+}
+
 exports.getDomain = function(req){
     var origin = req.headers.origin;
  
@@ -106,3 +114,16 @@ exports.emailToList = function(users){
     }
     return emailList;
 }
+
+exports.getAccessToken = function(req){
+    var authorization = req.get("Authorization");
+
+    if (authorization){
+        var array = authorization.split(" ");
+        var token = array[1];
+        return token;
+    } else {
+        return "noAuthorizationHeader";
+    }
+}
+

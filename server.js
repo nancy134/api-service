@@ -391,6 +391,15 @@ app.get('/testPostConfirm', (req, res) => {
 // constant-service
 ////////////////////////////
 
+app.get('/cc/emails', (req, res) => {
+    var accessToken = utilities.getAccessToken(req);
+    api.getCampaigns(accessToken).then(function(campaigns){
+        res.send(campaigns);
+    }).catch(function(err){
+        res.status(400).send(err);
+    });
+});
+
 app.post('/cc/emails', (req, res) => {
     api.createCampaign(req.body).then(function(campaign){
         res.send(campaign);
@@ -1223,6 +1232,26 @@ app.post('/spark/emails/:id/mustache', (req, res) => {
     }).catch(function(err){
         errorResponse(res, err);
     });
+});
+
+app.get('/spark/accounts/:id', (req, res) => {
+    var tenant = getTenantName(req);
+    var sparkAccessToken = getToken(req);
+    api.getSparkAccount(tenant, sparkAccessToken, req.params.id).then(function(account){
+        res.send(account);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.get('/spark/constants', (req, res) => {
+    var tenant = getTenantName(req);
+    var query = url.parse(req.url).query;
+    api.findConstant(tenant, query).then(function(constant){
+        res.send(constant);
+    }).catch(function(err){
+        errorResponse(res, err);
+    }); 
 });
 
 //////////////////////////////////
