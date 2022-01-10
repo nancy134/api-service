@@ -470,6 +470,16 @@ exports.tokenInfo = function(body){
     });
 }
 
+exports.ccAccount = function(accessToken){
+    return new Promise(function(resolve, reject){
+        constantService.getAccount(accessToken).then(function(account){
+            resolve(account);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
 //////////////////////////////
 // billing-service
 //////////////////////////////
@@ -1693,10 +1703,24 @@ exports.getSparkAccount = function(tenant, accessToken, id){
     });
 }
 
-exports.findConstant = function(tenant, query){
+exports.findSparkConstant = function(tenant, query){
     return new Promise(function(resolve, reject){
         tenantService.getTenant(tenant).then(function(resp){
             sparkService.findConstant(query).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.createSparkConstant = function(tenant, body){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            sparkService.createConstant(body).then(function(result){
                 resolve(result);
             }).catch(function(err){
                 reject(err);

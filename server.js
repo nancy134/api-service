@@ -424,6 +424,15 @@ app.post('/cc/tokeninfo', (req, res) => {
     });
 });
 
+app.get('/cc/accounts', (req, res) => {
+    var accessToken = utilities.getAccessToken(req);
+    api.ccAccount(accessToken).then(function(account){
+        res.send(account);
+    }).catch(function(err){
+        res.status(400).send(err);
+    });
+});
+
 ////////////////////////////
 // billing-service
 ////////////////////////////
@@ -1247,11 +1256,20 @@ app.get('/spark/accounts/:id', (req, res) => {
 app.get('/spark/constants', (req, res) => {
     var tenant = getTenantName(req);
     var query = url.parse(req.url).query;
-    api.findConstant(tenant, query).then(function(constant){
+    api.findSparkConstant(tenant, query).then(function(constant){
         res.send(constant);
     }).catch(function(err){
         errorResponse(res, err);
     }); 
+});
+
+app.post('/spark/constants', (req, res) => {
+    var tenant = getTenantName(req);
+    api.createSparkConstant(tenant, req.body).then(function(constant){
+        res.send(constant);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
 });
 
 //////////////////////////////////

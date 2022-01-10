@@ -173,3 +173,19 @@ exports.findConstant = function(query){
     });
 }
 
+exports.createConstant = function(body){
+    return new Promise(function(resolve, reject){
+        var url = process.env.SPARK_SERVICE + "/constants";
+        var options = {
+            url: url,
+            method: 'POST',
+            data: body
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
