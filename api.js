@@ -440,6 +440,16 @@ exports.getCampaigns = function(accessToken){
     });
 }
 
+exports.getCampaign = function(accessToken, id){
+    return new Promise(function(resolve, reject){
+        constantService.getCampaign(accessToken, id).then(function(campaign){
+            resolve(campaign);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
 exports.createCampaign = function(body){
     return new Promise(function(resolve, reject){
         constantService.createCampaign(body).then(function(campaign){

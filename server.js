@@ -400,6 +400,15 @@ app.get('/cc/emails', (req, res) => {
     });
 });
 
+app.get('/cc/emails/:id', (req, res) => {
+    var accessToken = utilities.getAccessToken(req);
+    api.getCampaign(accessToken, req.params.id).then(function(campaign){
+        res.send(campaign);
+    }).catch(function(err){
+        res.status(400).send(err);
+    });
+});
+
 app.post('/cc/emails', (req, res) => {
     api.createCampaign(req.body).then(function(campaign){
         res.send(campaign);
