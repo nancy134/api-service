@@ -91,6 +91,10 @@ app.get('/api', (req, res) => {
    res.send('api-service/api\n');
 });
 
+app.get('/test', (req, res) => {
+    res.send('api-service/test\n');
+});
+
 ////////////////////////////////////
 // auth-service
 ///////////////////////////////////
