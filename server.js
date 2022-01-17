@@ -46,6 +46,7 @@ function getTenantName(req){
   var host = req.get('host');
   var array = host.split(".");
   var tenant = array[0];
+  if (tenant === "www") tenant="mu-api";
   return tenant;
 }
 
