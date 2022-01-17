@@ -92,7 +92,8 @@ app.get('/api', (req, res) => {
 });
 
 app.get('/test', (req, res) => {
-    res.send('api-service/test\n');
+    var tenant = getTenantName(req);
+    res.send(tenant);
 });
 
 ////////////////////////////////////
