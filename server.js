@@ -46,7 +46,7 @@ function getTenantName(req){
   var host = req.get('host');
   var array = host.split(".");
   var tenant = array[0];
-  if (tenant === "www") tenant="mu-api";
+  if (tenant === "www" && array[1] === "murbansw") tenant="mu-api";
   return tenant;
 }
 
@@ -298,11 +298,11 @@ app.post('/spark/authToken', (req, res) => {
     var IdToken = getToken(req);
     api.getSparkAuthToken(tenant, IdToken, req.body).then(function(result){
 
-
+        var domain = utilities.getDomain(req);
         res.cookie('refresh_token', result.refresh_token, {
             maxAge: 86400 * 1000, // 24 hours
             secure: true, // cookie must be sent over https / ssl
-            domain: "local.phowma.com"
+            domain: domain 
         });
 
 
