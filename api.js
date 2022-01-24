@@ -1741,6 +1741,20 @@ exports.createSparkConstant = function(tenant, body){
     });
 }
 
+exports.getContacts = function(tenant, accessToken){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            sparkService.getContacts(accessToken).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
 ///////////////////////////////////////
 // stripo-service
 ///////////////////////////////////////
