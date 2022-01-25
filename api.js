@@ -490,6 +490,16 @@ exports.ccAccount = function(accessToken){
     });
 }
 
+exports.ccContacts = function(accessToken){
+    return new Promise(function(resolve, reject){
+        constantService.getContacts(accessToken).then(function(contacts){
+            resolve(contacts);
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
 //////////////////////////////
 // billing-service
 //////////////////////////////

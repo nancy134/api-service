@@ -100,3 +100,20 @@ exports.getAccount = function(accessToken){
     });
 }
 
+exports.getContacts = function(accessToken){
+    return new Promise(function(resolve, reject){
+        url = process.env.CONSTANT_SERVICE + "/contacts";
+        var headers = utilities.createConstantHeaders(accessToken);
+        var options = {
+            url: url,
+            method: 'GET',
+            headers: headers
+        }
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+

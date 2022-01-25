@@ -448,6 +448,15 @@ app.get('/cc/accounts', (req, res) => {
     });
 });
 
+app.get('/cc/contacts', (req, res) => {
+    var accessToken = utilities.getAccessToken(req);
+    api.ccContacts(accessToken).then(function(contacts){
+        res.send(contacts);
+    }).catch(function(err){
+        res.status(400).send(err);
+    });
+});
+
 ////////////////////////////
 // billing-service
 ////////////////////////////
