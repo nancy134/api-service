@@ -1289,7 +1289,8 @@ app.post('/spark/constants', (req, res) => {
 
 app.get('/spark/contacts', (req, res) => {
     var tenant = getTenantName(req);
-    api.getSparkContacts(tenant).then(function(contacts){
+    var sparkAccessToken = getToken(req);
+    api.getSparkContacts(tenant, sparkAccessToken).then(function(contacts){
         res.send(contacts);
     }).catch(function(err){
         errorResponse(res, err);
