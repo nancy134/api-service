@@ -248,6 +248,14 @@ app.get('/cc/authurl', (req, res) => {
                 }; 
                 console.log("ret:");
                 console.log(ret);
+                var domain = utilities.getDomain(req);
+
+                res.cookie('cc_refresh_token', authToken.refresh_token, {
+                    maxAge: 86400 * 1000, // 24 hours
+                    secure: true, // cookie must be sent over https / ssl
+                    domain: domain
+                });
+
                 res.send(ret);
             }).catch(function(err){
                 console.log("err1:");
