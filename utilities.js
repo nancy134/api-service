@@ -55,7 +55,8 @@ exports.createConstantHeaders = function(accessToken){
 
 exports.getDomain = function(req){
     var origin = req.headers.origin;
- 
+    if (!origin) origin = req.headers.host;
+    console.log("origin: "+origin); 
     var parts = origin.split("//");
     var domain = null;
     if (parts.length > 1){

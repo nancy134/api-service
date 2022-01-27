@@ -230,11 +230,49 @@ app.get('/vehicles', (req, res) => {
 app.get('/cc/authurl', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);
-    api.getCCAuthUrl(tenant, IdToken).then(function(result){
-        res.send(result);
-    }).catch(function(err){
-        errorResponse(res,err);
-    });
+    console.log("req.cookies:");
+    console.log(req.cookies);
+    if (req.cookies && req.cookies.cc_refresh_token){
+        var query = "refresh_token="+req.cookies.cc_refresh_token;
+        console.log("query: "+query);
+        api.ccRefreshToken(tenant, IdToken, query).then(function(authToken){
+            console.log("authToken:");
+            console.log(authToken);
+            api.getCCAuthUrl(tenant, IdToken).then(function(result){
+                console.log("result:");
+                console.log(result);
+                var ret = {
+                    authUrl: result,
+                    access_token: authToken.access_token,
+                    refresh_token: authToken.refresh_token
+                }; 
+                console.log("ret:");
+                console.log(ret);
+                res.send(ret);
+            }).catch(function(err){
+                console.log("err1:");
+                console.log(err);
+                errorResponse(res,err);
+            });
+        }).catch(function(err){
+            console.log("err2:");
+            console.log(err);
+            errorResponse(res, err);
+        });
+    } else {
+        api.getCCAuthUrl(tenant, IdToken).then(function(result){
+            console.log("result2:");
+            console.log(result);
+            var ret = {
+                authUrl: result
+            };
+            res.send(ret);
+        }).catch(function(err){
+            console.log("err3:");
+            console.log(err);
+            errorResponse(res, err);
+        });
+    }
 });
 
 app.get('/cc/authToken', (req, res) => {
@@ -242,8 +280,18 @@ app.get('/cc/authToken', (req, res) => {
     var IdToken = getToken(req);
     var query = url.parse(req.url).query;
     api.getCCAuthToken(tenant, IdToken, query).then(function(result){
+
+        console.log(result);
+        var domain = utilities.getDomain(req);
+
+        res.cookie('cc_refresh_token', result.refresh_token, {
+            maxAge: 86400 * 1000, // 24 hours
+            secure: true, // cookie must be sent over https / ssl
+            domain: domain
+        });
         res.send(result);
     }).catch(function(err){
+        console.log(err);
         errorResponse(res, err);
     });
 });
