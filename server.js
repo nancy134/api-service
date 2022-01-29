@@ -253,7 +253,7 @@ app.get('/cc/authurl', (req, res) => {
                 res.cookie('cc_refresh_token', authToken.refresh_token, {
                     maxAge: 86400 * 1000, // 24 hours
                     secure: true, // cookie must be sent over https / ssl
-                    domain: domain
+                    //domain: domain
                 });
 
                 res.send(ret);
@@ -295,7 +295,7 @@ app.get('/cc/authToken', (req, res) => {
         res.cookie('cc_refresh_token', result.refresh_token, {
             maxAge: 86400 * 1000, // 24 hours
             secure: true, // cookie must be sent over https / ssl
-            domain: domain
+            //domain: domain
         });
         res.send(result);
     }).catch(function(err){
@@ -330,6 +330,16 @@ app.get('/spark/authurl', (req, res) => {
                     access_token: authToken.access_token,
                     refresh_token: authToken.refresh_token
                 };
+                console.log("refresh ret:");
+                console.log(ret);
+                var domain = utilities.getDomain(req);
+                console.log("domain: "+domain);
+                res.cookie('refresh_token', ret.refresh_token, {
+                    maxAge: 86400 * 1000, // 24 hours
+                    secure: true, // cookie must be sent over https / ssl
+                    //domain: domain
+                });
+
                 res.send(ret);
             }).catch(function(err){
                 errorResponse(res, err);
@@ -355,10 +365,11 @@ app.post('/spark/authToken', (req, res) => {
     api.getSparkAuthToken(tenant, IdToken, req.body).then(function(result){
 
         var domain = utilities.getDomain(req);
+        console.log("domain: "+domain);
         res.cookie('refresh_token', result.refresh_token, {
             maxAge: 86400 * 1000, // 24 hours
             secure: true, // cookie must be sent over https / ssl
-            domain: domain 
+            //domain: domain 
         });
 
 
