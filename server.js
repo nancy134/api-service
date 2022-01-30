@@ -263,9 +263,18 @@ app.get('/cc/authurl', (req, res) => {
                 errorResponse(res,err);
             });
         }).catch(function(err){
-            console.log("err2:");
-            console.log(err);
-            errorResponse(res, err);
+            api.getCCAuthUrl(tenant, IdToken).then(function(result){
+                console.log("result3:");
+                console.log(result);
+                var ret = {
+                    authUrl: result
+                };
+                res.send(ret);
+            }).catch(function(err){
+                console.log("err4:");
+                console.log(err);
+                errorResponse(res, err);
+            });
         });
     } else {
         api.getCCAuthUrl(tenant, IdToken).then(function(result){
