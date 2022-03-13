@@ -872,6 +872,27 @@ app.post('/users/me/contacts', (req, res) => {
     });
 });
 
+// This is an API to opt in to receive emails
+app.post('/users', (req, res) => {
+    var tenant = getTenantName(req);
+    api.userOptIn(tenant, req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+// This is an API to opt out of receiving emails
+app.put('/users', (req, res) => {
+    var tenant = getTenantName(req);
+    api.userOptOut(tenant, req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+
 /////////////////////////////////////////
 // listing-service
 /////////////////////////////////////////

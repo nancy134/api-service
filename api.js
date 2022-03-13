@@ -29,7 +29,8 @@ var signUp = function(cognito_client_id, cognito_pool_id, userBody){
             cognitoPoolId: cognito_pool_id,
             username: userBody.username,
             password: userBody.password,
-            role: userBody.role
+            role: userBody.role,
+            promoCode: userBody.promoCode
         };
         var options = {
             method: 'POST',
@@ -986,6 +987,35 @@ exports.createContactsMe = function(tenant, IdToken, body){
         });
     });
 }
+
+exports.userOptIn = function(tenant, body){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            userService.userOptIn(body).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.userOptOut = function(tenant, body){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            userService.userOptOut(body).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
  
 ///////////////////////////////////
 // listing-service
