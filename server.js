@@ -872,6 +872,75 @@ app.post('/users/me/contacts', (req, res) => {
     });
 });
 
+app.get('/users/me/groups', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.getGroupsMe(tenant, IdToken).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        console.log(err);
+        errorResponse(res, err);
+    });
+});
+
+app.post('/users/me/groups', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.createGroupsMe(tenant, IdToken, req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        console.log(err);
+        errorResponse(res, err);
+    });
+});
+
+app.get('/users/me/clients/:id/groups', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    var query = url.parse(req.url).query;
+    api.getClientGroupsMe(tenant, IdToken, req.params.id, query).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        console.log(err);
+        errorResponse(res, err);
+    });
+});
+
+app.get('/users/me/groups/:id/clients', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    var query = url.parse(req.url).query;
+    api.getGroupClientsMe(tenant, IdToken, req.params.id, query).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        console.log(err);
+        errorResponse(res, err);
+    });
+});
+
+app.post('/users/me/groups/clients', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.createClientGroupMe(tenant, IdToken, req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        console.log(err);
+        errorResponse(res, err);
+    });
+});
+
+app.post('/clients/upload', upload.single('file'), function(req, res, next){
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+
+    api.clientsUpload(tenant, IdToken, req.file, req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        console.log(err);
+        errorResponse(res, err);
+    });
+});
+
 // This is an API to opt in to receive emails
 app.post('/users', (req, res) => {
     var tenant = getTenantName(req);
