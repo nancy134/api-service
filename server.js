@@ -403,7 +403,7 @@ app.post('/spark/refreshToken', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);
     api.getSparkRefreshToken(tenant, IdToken, req.body).then(function(result){
-        res.send(result);
+        res.status(201).send(result);
     }).catch(function(err){
         errorResponse(res, err);
     });
