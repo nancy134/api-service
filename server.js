@@ -24,6 +24,7 @@ var corsOptions = {
         "http://localhost:3000", 
         "https://www.murbansw.com", 
         "https://www.sabresw.com",
+        "https://www.findingcre.com",
         "https://local.phowma.com"
     ],
     credentials: true
@@ -403,6 +404,7 @@ app.post('/spark/refreshToken', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);
     api.getSparkRefreshToken(tenant, IdToken, req.body).then(function(result){
+        console.log(result);
         res.status(201).send(result);
     }).catch(function(err){
         errorResponse(res, err);
