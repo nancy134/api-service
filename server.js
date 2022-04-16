@@ -1341,6 +1341,16 @@ app.post('/mail/sendListing', (req, res) => {
     });
 });
 
+app.post('/mail/contactus', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.mailContactUs(tenant, IdToken, req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
 //////////////////////////////////
 // spark-service
 //////////////////////////////////

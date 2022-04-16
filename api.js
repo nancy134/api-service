@@ -1695,6 +1695,20 @@ exports.mailSendListing = function(tenant, IdToken, body){
     });
 }
 
+exports.mailContactUs = function(tenant, IdToken, body){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            mailService.contactUs(body, IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
 exports.createSparkEmailFromTemplate = function(tenant, accessToken, body){
     return new Promise(function(resolve, reject){
         tenantService.getTenant(tenant).then(function(resp){
