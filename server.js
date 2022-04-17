@@ -355,7 +355,14 @@ app.get('/spark/authurl', (req, res) => {
                 errorResponse(res, err);
             });
         }).catch(function(err){
-            errorResponse(res, err);
+            api.getSparkAuthUrl(tenant, IdToken).then(function(result){
+                var ret = {
+                    authUrl: result
+                };
+                res.send(ret);
+            }).catch(function(err){
+                errorResponse(res,err);
+            });
         });
     } else {
         api.getSparkAuthUrl(tenant, IdToken).then(function(result){
