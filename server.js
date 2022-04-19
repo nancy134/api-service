@@ -1491,6 +1491,53 @@ app.get('/spark/contacts', (req, res) => {
     });
 });
 
+app.post('/spark/purchased', (req, res) => {
+    var tenant = getTenantName(req);
+    api.sparkPurchased(tenant, req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.post('/spark/canceled', (req, res) => {
+    var tenant = getTenantName(req);
+    api.sparkCanceled(tenant, req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.post('/spark/reviewed', (req, res) => {
+    var tenant = getTenantName(req);
+    api.sparkReviewed(tenant, req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.post('/spark/paymentsuccess', (req, res) => {
+    var tenant = getTenantName(req);
+    api.sparkPaymentSuccess(tenant, req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        console.log(err);
+        errorResponse(res, err);
+    });
+});
+
+app.post('/spark/paymentfailure', (req, res) => {
+    var tenant = getTenantName(req);
+    api.sparkPaymentFailure(tenant, req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+
 //////////////////////////////////
 // image-service
 //////////////////////////////////

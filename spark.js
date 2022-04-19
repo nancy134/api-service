@@ -206,3 +206,83 @@ exports.getContacts = function(accessToken){
     });
 }
 
+exports.purchased = function(body){
+    return new Promise(function(resolve, reject){
+        var url = process.env.SPARK_SERVICE + "/purchased";
+        var options = {
+            url: url,
+            method: 'POST',
+            data: body
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
+exports.canceled = function(body){
+    return new Promise(function(resolve, reject){
+        var url = process.env.SPARK_SERVICE + "/canceled";
+        var options = {
+            url: url,
+            method: 'POST',
+            data: body
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
+exports.reviewed = function(body){
+    return new Promise(function(resolve, reject){
+        var url = process.env.SPARK_SERVICE + "/reviewed";
+        var options = {
+            url: url,
+            method: 'POST',
+            data: body
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
+exports.paymentSuccess = function(body){
+    return new Promise(function(resolve, reject){
+        var url = process.env.SPARK_SERVICE + "/paymentsuccess";
+        var options = {
+            url: url,
+            method: 'POST',
+            data: body
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
+exports.paymentFailure = function(body){
+    return new Promise(function(resolve, reject){
+        var url = process.env.SPARK_SERVICE + "/paymentfailure";
+        var options = {
+            url: url,
+            method: 'POST',
+            data: body
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
