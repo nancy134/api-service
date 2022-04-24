@@ -23,13 +23,14 @@ exports.createListItemMe = function(body, IdToken, cognito_client_id, cognito_po
     });
 }
 
-exports.getListItemsMe = function(ListId, IdToken, cognito_client_id, cognito_pool_id){
+exports.getListItemsMe = function(ListId, IdToken, query, cognito_client_id, cognito_pool_id){
     return new Promise(function(resolve, reject){
         var url =
             process.env.LISTING_SERVICE + 
             "/lists/" +
             ListId +
             "/listItems/me";
+        if (query) url += "?" + query;
         var headers = utilities.createHeaders(IdToken, cognito_client_id, cognito_pool_id);
         var options = {
             url: url,

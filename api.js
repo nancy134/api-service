@@ -1212,11 +1212,11 @@ exports.getListsMe = function(tenant, IdToken, query){
     });
 }
 
-exports.getListItemsMe = function(tenant, IdToken, ListId){
+exports.getListItemsMe = function(tenant, IdToken, ListId, query){
     return new Promise(function(resolve, reject){
         tenantService.getTenant(tenant)
         .then(resp =>
-            listItemService.getListItemsMe(ListId, IdToken, resp.cognito_client_id, resp.cognito_pool_id))
+            listItemService.getListItemsMe(ListId, IdToken, query, resp.cognito_client_id, resp.cognito_pool_id))
         .then(function(result){
             resolve(result);
         }).catch(function(err){

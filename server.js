@@ -1168,7 +1168,8 @@ app.get('/lists/:ListId/listItems/me', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);
     var ListId = req.params.ListId;
-    api.getListItemsMe(tenant, IdToken, ListId).then(function(result){
+    var query = url.parse(req.url).query;
+    api.getListItemsMe(tenant, IdToken, ListId, query).then(function(result){
         res.send(result);
     }).catch(function(err){
         errorResponse(res, err);
