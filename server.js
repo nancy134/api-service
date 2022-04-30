@@ -231,24 +231,15 @@ app.get('/vehicles', (req, res) => {
 app.get('/cc/authurl', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);
-    console.log("req.cookies:");
-    console.log(req.cookies);
     if (req.cookies && req.cookies.cc_refresh_token){
         var query = "refresh_token="+req.cookies.cc_refresh_token;
-        console.log("query: "+query);
         api.ccRefreshToken(tenant, IdToken, query).then(function(authToken){
-            console.log("authToken:");
-            console.log(authToken);
             api.getCCAuthUrl(tenant, IdToken).then(function(result){
-                console.log("result:");
-                console.log(result);
                 var ret = {
                     authUrl: result,
                     access_token: authToken.access_token,
                     refresh_token: authToken.refresh_token
                 }; 
-                console.log("ret:");
-                console.log(ret);
                 var domain = utilities.getDomain(req);
 
                 res.cookie('cc_refresh_token', authToken.refresh_token, {
@@ -259,35 +250,25 @@ app.get('/cc/authurl', (req, res) => {
 
                 res.send(ret);
             }).catch(function(err){
-                console.log("err1:");
-                console.log(err);
                 errorResponse(res,err);
             });
         }).catch(function(err){
             api.getCCAuthUrl(tenant, IdToken).then(function(result){
-                console.log("result3:");
-                console.log(result);
                 var ret = {
                     authUrl: result
                 };
                 res.send(ret);
             }).catch(function(err){
-                console.log("err4:");
-                console.log(err);
                 errorResponse(res, err);
             });
         });
     } else {
         api.getCCAuthUrl(tenant, IdToken).then(function(result){
-            console.log("result2:");
-            console.log(result);
             var ret = {
                 authUrl: result
             };
             res.send(ret);
         }).catch(function(err){
-            console.log("err3:");
-            console.log(err);
             errorResponse(res, err);
         });
     }
@@ -299,17 +280,17 @@ app.get('/cc/authToken', (req, res) => {
     var query = url.parse(req.url).query;
     api.getCCAuthToken(tenant, IdToken, query).then(function(result){
 
-        console.log(result);
         var domain = utilities.getDomain(req);
-
-        res.cookie('cc_refresh_token', result.refresh_token, {
-            maxAge: 86400 * 1000, // 24 hours
-            secure: true, // cookie must be sent over https / ssl
-            //domain: domain
-        });
+        
+        if (result.refresh_token){
+            res.cookie('cc_refresh_token', result.refresh_token, {
+                maxAge: 86400 * 1000, // 24 hours
+                secure: true, // cookie must be sent over https / ssl
+                //domain: domain
+            });
+        }
         res.send(result);
     }).catch(function(err){
-        console.log(err);
         errorResponse(res, err);
     });
 });
@@ -340,10 +321,7 @@ app.get('/spark/authurl', (req, res) => {
                     access_token: authToken.access_token,
                     refresh_token: authToken.refresh_token
                 };
-                console.log("refresh ret:");
-                console.log(ret);
                 var domain = utilities.getDomain(req);
-                console.log("domain: "+domain);
                 res.cookie('refresh_token', ret.refresh_token, {
                     maxAge: 86400 * 1000, // 24 hours
                     secure: true, // cookie must be sent over https / ssl
@@ -382,7 +360,6 @@ app.post('/spark/authToken', (req, res) => {
     api.getSparkAuthToken(tenant, IdToken, req.body).then(function(result){
 
         var domain = utilities.getDomain(req);
-        console.log("domain: "+domain);
         res.cookie('refresh_token', result.refresh_token, {
             maxAge: 86400 * 1000, // 24 hours
             secure: true, // cookie must be sent over https / ssl
@@ -411,7 +388,6 @@ app.post('/spark/refreshToken', (req, res) => {
     var tenant = getTenantName(req);
     var IdToken = getToken(req);
     api.getSparkRefreshToken(tenant, IdToken, req.body).then(function(result){
-        console.log(result);
         res.status(201).send(result);
     }).catch(function(err){
         errorResponse(res, err);
@@ -887,7 +863,6 @@ app.get('/users/me/groups', (req, res) => {
     api.getGroupsMe(tenant, IdToken).then(function(result){
         res.send(result);
     }).catch(function(err){
-        console.log(err);
         errorResponse(res, err);
     });
 });
@@ -898,7 +873,6 @@ app.post('/users/me/groups', (req, res) => {
     api.createGroupsMe(tenant, IdToken, req.body).then(function(result){
         res.send(result);
     }).catch(function(err){
-        console.log(err);
         errorResponse(res, err);
     });
 });
@@ -910,7 +884,6 @@ app.get('/users/me/clients/:id/groups', (req, res) => {
     api.getClientGroupsMe(tenant, IdToken, req.params.id, query).then(function(result){
         res.send(result);
     }).catch(function(err){
-        console.log(err);
         errorResponse(res, err);
     });
 });
@@ -922,7 +895,6 @@ app.get('/users/me/groups/:id/clients', (req, res) => {
     api.getGroupClientsMe(tenant, IdToken, req.params.id, query).then(function(result){
         res.send(result);
     }).catch(function(err){
-        console.log(err);
         errorResponse(res, err);
     });
 });
@@ -933,7 +905,6 @@ app.post('/users/me/groups/clients', (req, res) => {
     api.createClientGroupMe(tenant, IdToken, req.body).then(function(result){
         res.send(result);
     }).catch(function(err){
-        console.log(err);
         errorResponse(res, err);
     });
 });
@@ -945,7 +916,6 @@ app.post('/clients/upload', upload.single('file'), function(req, res, next){
     api.clientsUpload(tenant, IdToken, req.file, req.body).then(function(result){
         res.send(result);
     }).catch(function(err){
-        console.log(err);
         errorResponse(res, err);
     });
 });
@@ -1524,7 +1494,6 @@ app.post('/spark/paymentsuccess', (req, res) => {
     api.sparkPaymentSuccess(tenant, req.body).then(function(result){
         res.send(result);
     }).catch(function(err){
-        console.log(err);
         errorResponse(res, err);
     });
 });

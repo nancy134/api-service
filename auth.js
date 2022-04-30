@@ -72,7 +72,6 @@ exports.getSparkAuthUrl = function(IdToken, cognito_client_id, cognito_pool_id, 
 exports.getSparkAuthToken = function(IdToken, cognito_client_id, cognito_pool_id, body){
     return new Promise(function(resolve, reject){
         var url = process.env.AUTH_SERVICE + "/spark/authToken";
-        console.log(url);
         var headers = utilities.createHeaders(IdToken, cognito_client_id, cognito_pool_id);
         var options = {
             url: url,
@@ -80,7 +79,6 @@ exports.getSparkAuthToken = function(IdToken, cognito_client_id, cognito_pool_id
             headers: headers,
             data: body
         };
-        console.log(body);
         axios(options).then(function(result){
             resolve(result.data);
         }).catch(function(err){
@@ -109,7 +107,6 @@ exports.getSparkLogoutUrl = function(IdToken, cognito_client_id, cognito_pool_id
 exports.getSparkRefreshToken = function(IdToken, cognito_client_id, cognito_pool_id, body){
     return new Promise(function(resolve, reject){
         var url = process.env.AUTH_SERVICE + "/spark/refreshToken";
-        console.log(url);
         var headers = utilities.createHeaders(IdToken, cognito_client_id, cognito_pool_id);
         var options = {
             url: url,
@@ -117,7 +114,6 @@ exports.getSparkRefreshToken = function(IdToken, cognito_client_id, cognito_pool
             headers: headers,
             data: body
         };
-        console.log(body);
         axios(options).then(function(result){
             resolve(result.data);
         }).catch(function(err){
