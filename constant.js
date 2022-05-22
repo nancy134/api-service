@@ -30,7 +30,7 @@ exports.getCampaign = function(accessToken, id){
         axios(options).then(function(result){
             resolve(result.data);
         }).catch(function(err){
-            reject(utilities.procsesAxiosError(err));
+            reject(utilities.processAxiosError(err));
         });
     });
 }
