@@ -17,8 +17,8 @@ const HOST = '0.0.0.0';
 
 // App
 const app = express();
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({limit: '10mb', extended: false}));
+app.use(bodyParser.json({limit: '10mb'}));
 var corsOptions = {
     origin: [
         "http://localhost:3000", 
