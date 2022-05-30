@@ -1783,10 +1783,10 @@ exports.getSystem = function(tenant, accessToken){
     });
 }
 
-exports.getSavedSearches = function(tenant, accessToken){
+exports.getSavedSearches = function(tenant, accessToken, query){
     return new Promise(function(resolve, reject){
         tenantService.getTenant(tenant).then(function(resp){
-            sparkService.getSavedSearches(accessToken).then(function(result){
+            sparkService.getSavedSearches(accessToken, query).then(function(result){
                 resolve(result);
             }).catch(function(err){
                 reject(err);

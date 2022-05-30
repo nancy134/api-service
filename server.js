@@ -1376,7 +1376,8 @@ app.get('/spark/system', (req, res) => {
 app.get('/spark/savedsearches', (req, res) => {
     var tenant = getTenantName(req);
     var sparkAccessToken = getToken(req);
-    api.getSavedSearches(tenant, sparkAccessToken).then(function(result){
+    var query = url.parse(req.url).query;
+    api.getSavedSearches(tenant, sparkAccessToken, query).then(function(result){
         res.send(result);
     }).catch(function(err){
         errorResponse(res, err);

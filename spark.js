@@ -70,9 +70,12 @@ exports.getSystem = function(accessToken){
     });
 }
 
-exports.getSavedSearches = function(accessToken){
+exports.getSavedSearches = function(accessToken, query){
     return new Promise(function(resolve, reject){
         var url = process.env.SPARK_SERVICE + "/savedSearches";
+        if (query){
+            url += "?" + query;
+        }
         var headers = utilities.createSparkHeaders(accessToken);
         var options = {
             url: url,
