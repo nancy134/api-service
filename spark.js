@@ -127,14 +127,15 @@ exports.createEmail = function(accessToken, id){
     });
 }
 
-exports.createEmailData = function(accessToken, id){
+exports.createEmailData = function(accessToken, id, body){
     return new Promise(function(resolve, reject){
         var url = process.env.SPARK_SERVICE + "/emails/" + id + "/mustache";
         var headers = utilities.createSparkHeaders(accessToken);
         var options = {
             url: url,
             method: 'POST',
-            headers: headers
+            headers: headers,
+            data: body
         };
         axios(options).then(function(result){
             resolve(result.data);
@@ -288,4 +289,39 @@ exports.paymentFailure = function(body){
         });
     });
 }
+
+exports.getTemplates = function(accessToken){
+    return new Promise(function(resolve, reject){
+        var url = process.env.SPARK_SERVICE + "/templates";
+        var headers = utilities.createSparkHeaders(accessToken);
+        var options = {
+            url: url,
+            method: 'GET',
+            headers: headers
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
+exports.getTemplate = function(accessToken, id){
+    return new Promise(function(resolve, reject){
+        var url = process.env.SPARK_SERVICE + "/templates/" + id;
+        var headers = utilities.createSparkHeaders(accessToken);
+        var options = {
+            url: url,
+            method: 'GET',
+            headers: headers
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
 

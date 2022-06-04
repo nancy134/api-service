@@ -1825,10 +1825,10 @@ exports.createSparkEmail = function(tenant, accessToken, id){
     });
 }
 
-exports.createSparkEmailData = function(tenant, accessToken, id){
+exports.createSparkEmailData = function(tenant, accessToken, id, body){
     return new Promise(function(resolve, reject){
         tenantService.getTenant(tenant).then(function(resp){
-            sparkService.createEmailData(accessToken, id).then(function(result){
+            sparkService.createEmailData(accessToken, id, body).then(function(result){
                 resolve(result);
             }).catch(function(err){
                 reject(err);
@@ -1955,6 +1955,34 @@ exports.sparkPaymentFailure  = function(tenant, body){
     return new Promise(function(resolve, reject){
         tenantService.getTenant(tenant).then(function(resp){
             sparkService.paymentFailure(body).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.getSparkTemplates = function(tenant, accessToken){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            sparkService.getTemplates(accessToken).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.getSparkTemplate = function(tenant, accessToken, id){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            sparkService.getTemplate(accessToken, id).then(function(result){
                 resolve(result);
             }).catch(function(err){
                 reject(err);

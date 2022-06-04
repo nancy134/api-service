@@ -1413,7 +1413,7 @@ app.post('/spark/emails/:id', (req, res) => {
 app.post('/spark/emails/:id/mustache', (req, res) => {
     var tenant = getTenantName(req);
     var sparkAccessToken = getToken(req);
-    api.createSparkEmailData(tenant, sparkAccessToken, req.params.id).then(function(emailData){
+    api.createSparkEmailData(tenant, sparkAccessToken, req.params.id, req.body).then(function(emailData){
         api.createSparkEmailFromTemplate(tenant, sparkAccessToken, emailData).then(function(html){
             res.send(html);
         }).catch(function(err){
@@ -1508,6 +1508,25 @@ app.post('/spark/paymentfailure', (req, res) => {
     });
 });
 
+app.get('/spark/templates', (req, res) => {
+    var tenant = getTenantName(req);
+    var sparkAccessToken = getToken(req);
+    api.getSparkTemplates(tenant, sparkAccessToken).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.get('/spark/templates/:id', (req, res) => {
+    var tenant = getTenantName(req);
+    var sparkAccessToken = getToken(req);
+    api.getSparkTemplate(tenant, sparkAccessToken, req.params.id).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
 
 //////////////////////////////////
 // image-service
