@@ -127,3 +127,14 @@ exports.getAccessToken = function(req){
     }
 }
 
+exports.mergeAssociates = function(listingAssociates, userAssociates){
+    for (var i=0; i<listingAssociates.length; i++){
+        for (var j=0; j<userAssociates.length; j++){
+            if (listingAssociates[i].email === userAssociates[j].email){
+                userAssociates[j].id = listingAssociates[i].id;
+            }
+        }
+    }
+    return userAssociates;
+}
+

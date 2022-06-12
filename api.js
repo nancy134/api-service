@@ -500,6 +500,25 @@ exports.ccContacts = function(accessToken){
         });
     });
 }
+//////////////////////////////
+// google auth
+/////////////////////////////
+
+exports.getGoogleTokens = function(tenant, body){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            authService.getGoogleTokens(body).then(function(googleTokens){
+                resolve(googleTokens);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+
 
 //////////////////////////////
 // billing-service
@@ -1371,6 +1390,25 @@ exports.deleteListingUser = function(tenant, IdToken, listingVersionId, userId){
         tenantService.getTenant(tenant).then(function(resp){
             listingService.deleteListingUser(listingVersionId, userId, IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(result){
                 resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.getListingsUsersAssociatesMe = function(tenant, IdToken){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            listingService.getListingsUsersAssociatesMe(IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(listingAssociates){
+                exports.getAssociatesMe(tenant, IdToken).then(function(userAssociates){
+                    mergedAssociates = utilities.mergeAssociates(listingAssociates, userAssociates)
+                    resolve(mergedAssociates);
+                }).catch(function(err){
+                    reject(err);
+                });
             }).catch(function(err){
                 reject(err);
             });

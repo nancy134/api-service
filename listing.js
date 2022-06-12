@@ -386,3 +386,21 @@ exports.deleteCondo = function(listingVersionId, condoId, IdToken, cognito_clien
         });
     });
 }
+
+exports.getListingsUsersAssociatesMe = function(IdToken, cognito_client_id, cognito_pool_id){
+    return new Promise(function(resolve, reject){
+        var url = process.env.LISTING_SERVICE + "/listings/users/associates/me";
+        var headers = utilities.createHeaders(IdToken, cognito_client_id, cognito_pool_id);
+        var options = {
+            url: url,
+            method: 'GET',
+            headers: headers
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
