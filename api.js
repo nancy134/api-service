@@ -1761,6 +1761,20 @@ exports.createSparkEmailFromTemplate = function(tenant, accessToken, body){
     });
 }
 
+exports.sendGoogleEmail = function(tenant, body){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            mailService.sendGoogleEmail(body).then(function(email){
+                resolve(email);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
 ////////////////////////////////////////
 // spark-service
 ////////////////////////////////////////

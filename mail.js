@@ -89,3 +89,19 @@ exports.createSparkEmail = function(body){
     });
 }
 
+exports.sendGoogleEmail = function(body){
+    return new Promise(function(resolve, reject){
+        var url = process.env.MAIL_SERVICE + "/google/emails";
+        var options = {
+            url: url,
+            method: 'POST',
+            data: body
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+

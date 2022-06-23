@@ -403,6 +403,15 @@ app.post('/google/auth', (req, res) => {
     }); 
 });
 
+app.post('/google/emails', (req, res) => {
+    var tenant = getTenantName(req);
+    api.sendGoogleEmail(tenant, req.body).then(function(email){
+        res.send(email);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
 // This is temporary to make sure internal api works
 app.get('/vexAuth', (req, res) => {
     var vexAuthPromise = vexService.getAuthToken(process.env.VEX_AUTH_USERNAME, process.env.VEX_AUTH_PASSWORD);
