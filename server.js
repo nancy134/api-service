@@ -48,6 +48,7 @@ function getTenantName(req){
   var array = host.split(".");
   var tenant = array[0];
   if (tenant === "www" && array[1] === "murbansw") tenant="mu-api";
+  if (tenant === "localhost:49163") tenant="sc-api";
   return tenant;
 }
 
