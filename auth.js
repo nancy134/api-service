@@ -138,3 +138,50 @@ exports.getGoogleTokens = function(body){
     });
 }
 
+exports.getSmartcarTokens = function(body){
+    return new Promise(function(resolve, reject){
+        var url = process.env.AUTH_SERVICE + "/smartcar/auth";
+        var options = {
+            url: url,
+            method: 'POST',
+            data: body
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
+exports.getSmartcarAuthUrl = function(){
+    return new Promise(function(resolve, reject){
+        var url = process.env.AUTH_SERVICE + "/smartcar/authurl";
+        var options = {
+            url: url,
+            method: 'GET'
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
+exports.getSmartcarRefreshToken = function(body){
+    return new Promise(function(resolve, reject){
+        var url = process.env.AUTH_SERVICE + "/smartcar/refreshToken";
+        var options = {
+            url: url,
+            method: 'POST',
+            data: body
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+

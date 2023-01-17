@@ -14,6 +14,7 @@ const constantService = require('./constant');
 const sparkService = require('./spark');
 const imageService = require('./image');
 const stripoService = require('./stripo');
+const smartcarService = require('./smartcar');
 
 Object.prototype.getName = function() { 
    var funcNameRegex = /function (.{1,})\(/;
@@ -518,7 +519,23 @@ exports.getGoogleTokens = function(tenant, body){
     });
 }
 
+//////////////////////////////
+// Smartcar auth
+//////////////////////////////
 
+exports.getSmartcarTokens = function(tenant, body){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            authService.getSmartcarTokens(body).then(function(tokens){
+                resolve(tokens);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
 
 //////////////////////////////
 // billing-service
@@ -2053,6 +2070,70 @@ exports.createStripoEmail = function(tenant, body){
     return new Promise(function(resolve, reject){
         tenantService.getTenant(tenant).then(function(resp){
             stripoService.createEmail(body).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+///////////////////////////////////////
+// smartcar-service
+///////////////////////////////////////
+
+exports.getSmartcarAuthUrl = function(tenant){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            authService.getSmartcarAuthUrl()
+            .then(function(authUrl){
+                resolve(authUrl);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.getSmartcarRefreshToken = function(tenant, body){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            body.clientId = resp.sparkClientId;
+            authService.getSmartcarRefreshToken(
+                body)
+            .then(function(smartcarAuthToken){
+                resolve(smartcarAuthToken);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.getSmartcarVehicles = function(tenant, accessToken){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            smartcarService.getVehicles(accessToken).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.getSmartcarLocation = function(tenant, accessToken, id){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            smartcarService.getLocation(accessToken, id).then(function(result){
                 resolve(result);
             }).catch(function(err){
                 reject(err);

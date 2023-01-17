@@ -412,6 +412,80 @@ app.post('/google/emails', (req, res) => {
     });
 });
 
+//////////////////////////////////////////
+// Smartcar
+//////////////////////////////////////////
+
+app.post('/smartcar/auth', (req, res) => {
+    var tenant = getTenantName(req);
+    api.getSmartcarTokens(tenant, req.body).then(function(tokens){
+        console.log(tokens);
+        res.cookie('refreshToken', tokens.refreshToken, {
+            maxAge: 86400 * 1000,
+            secure: true
+        });
+        res.send(tokens);
+    }).catch(function(err){
+        console.log(err);
+        errorResponse(res, err);
+    });
+});
+
+app.get('/smartcar/authurl', (req, res) => {
+    var tenant = getTenantName(req);
+    console.log(req.cookies);
+    if (req.cookies && req.cookies.refreshToken){
+        var body = {
+            refresh_token: req.cookies.refreshToken
+        };
+        api.getSmartcarRefreshToken(tenant, body).then(function(authToken){
+            api.getSmartcarAuthUrl(tenant).then(function(result){
+                var ret = {
+                    authUrl: result,
+                    access_token: authToken.access_token,
+                    refresh_token: authToken.refresh_token
+                };
+                var domain = utilities.getDomain(req);
+                res.cookie('refresh_token', ret.refresh_token, {
+                    maxAge: 86400 * 1000, // 24 hours
+                    secure: true, // cookie must be sent over https / ssl
+                    //domain: domain
+                });
+
+                res.send(ret);
+            }).catch(function(err){
+                console.log("err1:");
+                console.log(err);
+                errorResponse(res, err);
+            });
+        }).catch(function(err){
+            console.log("err2:");
+            console.log(err);
+            api.getSmartcarAuthUrl(tenant).then(function(result){
+                var ret = {
+                    authUrl: result
+                };
+                res.send(ret);
+            }).catch(function(err){
+                console.log("err3:");
+                console.log(err);
+                errorResponse(res,err);
+            });
+        });
+    } else {
+        api.getSmartcarAuthUrl(tenant).then(function(result){
+            var ret = {
+                authUrl: result
+            };
+            res.send(ret);
+        }).catch(function(err){
+            console.log("err4:");
+            console.log(err);
+            errorResponse(res,err);
+        });
+    }
+});
+
 // This is temporary to make sure internal api works
 app.get('/vexAuth', (req, res) => {
     var vexAuthPromise = vexService.getAuthToken(process.env.VEX_AUTH_USERNAME, process.env.VEX_AUTH_PASSWORD);
@@ -1553,6 +1627,80 @@ app.get('/spark/templates/:id', (req, res) => {
     api.getSparkTemplate(tenant, sparkAccessToken, req.params.id).then(function(result){
         res.send(result);
     }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+//////////////////////////////////
+// smartcar-service
+//////////////////////////////////
+
+app.get('/smartcar/authurl', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+
+    if (req.cookies && req.cookies.refresh_token){
+        var body = {
+            refresh_token: req.cookies.refresh_token
+        };
+        api.getSmartcarRefreshToken(tenant, IdToken, body).then(function(authToken){
+            api.getSmartcarAuthUrl(tenant, IdToken).then(function(result){
+                var ret = {
+                    authUrl: result,
+                    access_token: authToken.access_token,
+                    refresh_token: authToken.refresh_token
+                };
+                var domain = utilities.getDomain(req);
+                res.cookie('refresh_token', ret.refresh_token, {
+                    maxAge: 86400 * 1000, // 24 hours
+                    secure: true, // cookie must be sent over https / ssl
+                    //domain: domain
+                });
+
+                res.send(ret);
+            }).catch(function(err){
+                errorResponse(res, err);
+            });
+        }).catch(function(err){
+            api.getSmartcarAuthUrl(tenant, IdToken).then(function(result){
+                var ret = {
+                    authUrl: result
+                };
+                res.send(ret);
+            }).catch(function(err){
+                errorResponse(res,err);
+            });
+        });
+    } else {
+        api.getSmartcarAuthUrl(tenant, IdToken).then(function(result){
+            var ret = {
+                authUrl: result
+            };
+            res.send(ret);
+        }).catch(function(err){
+            errorResponse(res,err);
+        });
+    }
+});
+
+app.get('/smartcar/vehicles', (req, res) => {
+    var tenant = getTenantName(req);
+    var accessToken = getToken(req);
+    api.getSmartcarVehicles(tenant, accessToken).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        console.log(err);
+        errorResponse(res, err);
+    });
+});
+
+app.get('/smartcar/vehicles/:id/location', (req, res) => {
+    var tenant = getTenantName(req);
+    var accessToken = getToken(req);
+    var id = req.params.id
+    api.getSmartcarLocation(tenant, accessToken,id).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        console.log(err);
         errorResponse(res, err);
     });
 });

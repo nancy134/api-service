@@ -45,6 +45,14 @@ exports.createSparkHeaders = function(accessToken){
     return headers;
 }
 
+exports.createSmartcarHeaders = function(accessToken){
+    var bearerToken = "Bearer " + accessToken;
+    var headers = {
+        "Authorization" : bearerToken 
+    };
+    return headers;
+}
+
 exports.createConstantHeaders = function(accessToken){
     var bearerToken = "Bearer " + accessToken;
     var headers = {
