@@ -2207,3 +2207,17 @@ exports.libraryUpload = function(tenant, IdToken, file, body){
     });
 }
 
+exports.getSmartcarBattery = function(tenant, accessToken, id){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            smartcarService.getBattery(accessToken, id).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+

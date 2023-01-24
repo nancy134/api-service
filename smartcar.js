@@ -52,4 +52,21 @@ exports.getVin = function(accessToken, id){
     });
 }
 
+exports.getBattery = function(accessToken, id){
+    return new Promise(function(resolve, reject){
+        var url = process.env.SMARTCAR_SERVICE + "/vehicles/" + id + "/battery";
+        var headers = utilities.createSmartcarHeaders(accessToken);
+        var options = {
+            url: url,
+            method: 'GET',
+            headers: headers
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
 
