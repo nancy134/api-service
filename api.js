@@ -2144,6 +2144,20 @@ exports.getSmartcarLocation = function(tenant, accessToken, id){
     });
 }
 
+
+exports.getSmartcarVin = function(tenant, accessToken, id){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            smartcarService.getVin(accessToken, id).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
 ///////////////////////////////////////
 // image-service
 //////////////////////////////////////
