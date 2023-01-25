@@ -2221,3 +2221,16 @@ exports.getSmartcarBattery = function(tenant, accessToken, id){
     });
 }
 
+exports.getSmartcarOdometer = function(tenant, accessToken, id){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            smartcarService.getOdometer(accessToken, id).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
