@@ -2248,3 +2248,18 @@ exports.getSmartcarVehicleAttributes = function(tenant, accessToken, id){
         });
     });
 }
+
+exports.getSmartcarTirePressure = function(tenant, accessToken, id){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            smartcarService.getTirePressure(accessToken, id).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
