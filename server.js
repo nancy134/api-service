@@ -1778,6 +1778,18 @@ app.get('/smartcar/vehicles/:id/odometer', (req, res) => {
     });
 });
 
+app.get('/smartcar/vehicles/:id', (req, res) => {
+    var tenant = getTenantName(req);
+    var accessToken = getToken(req);
+    var id = req.params.id
+    api.getSmartcarVehicleAttributes(tenant, accessToken,id).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        console.log(err);
+        errorResponse(res, err);
+    });
+});
+
 app.listen(PORT, HOST);
 
 module.exports = app;
