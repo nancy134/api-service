@@ -1802,6 +1802,18 @@ app.get('/smartcar/vehicles/:id/tires/pressure', (req, res) => {
     });
 });
 
+app.get('/smartcar/vehicles/:id/fuel', (req, res) => {
+    var tenant = getTenantName(req);
+    var accessToken = getToken(req);
+    var id = req.params.id
+    api.getSmartcarFuel(tenant, accessToken,id).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        console.log(err);
+        errorResponse(res, err);
+    });
+});
+
 app.listen(PORT, HOST);
 
 module.exports = app;
