@@ -2292,4 +2292,17 @@ exports.getSmartcarCharge = function(tenant, accessToken, id){
 }
 
 
+exports.getSmartcarPermissions = function(tenant, accessToken, id){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            smartcarService.getPermissions(accessToken, id).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
 
