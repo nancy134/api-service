@@ -190,3 +190,21 @@ exports.controlCharge= function(accessToken, id, body){
 }
 
 
+exports.controlSecurity = function(accessToken, id, body){
+    return new Promise(function(resolve, reject){
+        var url = process.env.SMARTCAR_SERVICE + "/vehicles/" + id + "/security";
+        var headers = utilities.createSmartcarHeaders(accessToken);
+        var options = {
+            url: url,
+            method: 'POST',
+            headers: headers,
+			data: body
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+

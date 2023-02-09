@@ -1853,6 +1853,19 @@ app.post('/smartcar/vehicles/:id/charge', (req, res) => {
     });
 });
 
+app.post('/smartcar/vehicles/:id/security', (req, res) => {
+    var tenant = getTenantName(req);
+    var accessToken = getToken(req);
+    var id = req.params.id;
+	var body = req.body
+    api.controlSmartcarSecurity(tenant, accessToken,id, body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        console.log(err);
+        errorResponse(res, err);
+    });
+});
+
 
 app.listen(PORT, HOST);
 

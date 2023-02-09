@@ -2320,3 +2320,16 @@ exports.controlSmartcarCharge = function(tenant, accessToken, id, body){
     });
 }
 
+exports.controlSmartcarSecurity = function(tenant, accessToken, id, body){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            smartcarService.controlSecurity(accessToken, id, body).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
