@@ -1866,6 +1866,18 @@ app.post('/smartcar/vehicles/:id/security', (req, res) => {
     });
 });
 
+app.get('/smartcar/vehicles/:id/engine/oil', (req, res) => {
+    var tenant = getTenantName(req);
+    var accessToken = getToken(req);
+    var id = req.params.id;
+    api.getSmartcarEngineOil(tenant, accessToken,id).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        console.log(err);
+        errorResponse(res, err);
+    });
+});
+
 
 app.listen(PORT, HOST);
 
