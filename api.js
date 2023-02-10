@@ -2349,3 +2349,17 @@ exports.getSmartcarEngineOil = function(tenant, accessToken, id){
     });
 }
 
+exports.getSmartcarBatteryCapacity = function(tenant, accessToken, id){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            smartcarService.getBatteryCapacity(accessToken, id).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
