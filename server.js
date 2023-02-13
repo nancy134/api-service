@@ -1890,6 +1890,19 @@ app.get('/smartcar/vehicles/:id/battery/capacity', (req, res) => {
     });
 });
 
+app.get('/smartcar/user', (req, res) => {
+    var tenant = getTenantName(req);
+    var accessToken = getToken(req);
+    var id = req.params.id;
+    api.getSmartcarUser(tenant, accessToken).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        console.log(err);
+        errorResponse(res, err);
+    });
+});
+
+
 app.listen(PORT, HOST);
 
 module.exports = app;
