@@ -1903,6 +1903,32 @@ app.get('/smartcar/user', (req, res) => {
 });
 
 
+app.get('/smartcar/vehicles/:id/tesla/compass', (req, res) => {
+    var tenant = getTenantName(req);
+    var accessToken = getToken(req);
+    var id = req.params.id;
+    api.getSmartcarTeslaCompass(tenant, accessToken,id).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        console.log(err);
+        errorResponse(res, err);
+    });
+});
+
+
+app.get('/smartcar/vehicles/:id/tesla/charge/ammeter', (req, res) => {
+    var tenant = getTenantName(req);
+    var accessToken = getToken(req);
+    var id = req.params.id;
+    api.getSmartcarTeslaChargeAmperage(tenant, accessToken,id).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        console.log(err);
+        errorResponse(res, err);
+    });
+});
+
+
 app.listen(PORT, HOST);
 
 module.exports = app;

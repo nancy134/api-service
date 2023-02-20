@@ -2377,3 +2377,31 @@ exports.getSmartcarUser = function(tenant, accessToken){
     });
 }
 
+exports.getSmartcarTeslaCompass = function(tenant, accessToken, id){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            smartcarService.getTeslaCompass(accessToken, id).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+
+exports.getSmartcarTeslaChargeAmperage = function(tenant, accessToken, id){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            smartcarService.getTeslaChargeAmperage(accessToken, id).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
