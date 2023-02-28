@@ -2405,3 +2405,18 @@ exports.getSmartcarTeslaChargeAmperage = function(tenant, accessToken, id){
         });
     });
 }
+
+exports.getGooglePlaces = function(tenant, lat, long){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            smartcarService.getPlaces(lat, long).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+

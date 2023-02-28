@@ -1929,6 +1929,18 @@ app.get('/smartcar/vehicles/:id/tesla/charge/ammeter', (req, res) => {
 });
 
 
+app.get('/smartcar/google/places', (req, res) => {
+    var tenant = getTenantName(req);
+    var lat = req.query.lat;
+	var long = req.query.long;
+    api.getGooglePlaces(tenant, lat, long).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        console.log(err);
+        errorResponse(res, err);
+    });
+});
+
 app.listen(PORT, HOST);
 
 module.exports = app;

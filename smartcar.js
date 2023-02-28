@@ -297,3 +297,18 @@ exports.getTeslaChargeAmperage = function(accessToken, id){
 }
 
 
+exports.getPlaces = function(lat, long){
+    return new Promise(function(resolve, reject){
+        var url = process.env.SMARTCAR_SERVICE + "/google/places?lat=" + lat + "&long=" + long;
+        var options = {
+            url: url,
+            method: 'GET'
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
