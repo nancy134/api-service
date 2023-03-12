@@ -22,7 +22,8 @@ app.use(bodyParser.json({limit: '10mb'}));
 var corsOptions = {
     origin: [
         "http://localhost:3000", 
-        "https://www.murbansw.com", 
+        "https://www.murbansw.com",
+        "https://sc.murbansw.com",
         "https://www.sabresw.com",
         "https://www.findingcre.com",
         "https://local.phowma.com"
