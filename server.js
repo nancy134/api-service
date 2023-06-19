@@ -105,6 +105,8 @@ app.get('/test', (req, res) => {
 ///////////////////////////////////
 
 app.post('/signup', (req, res) => {
+    console.log(req.body);
+
     var tenant = getTenantName(req);
     var signupPromise = api.signup(
         tenant,
