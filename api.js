@@ -25,14 +25,20 @@ Object.prototype.getName = function() {
 var signUp = function(cognito_client_id, cognito_pool_id, userBody){
     return new Promise(function(resolve, reject){
         var url = process.env.AUTH_SERVICE + "/signUp";
-        var body = {
-            cognitoClientId: cognito_client_id,
-            cognitoPoolId: cognito_pool_id,
-            username: userBody.username,
-            password: userBody.password,
-            role: userBody.role,
-            promoCode: userBody.promoCode
-        };
+        var body = {};
+        body.cognitoClientId = cognito_client_id;
+        body.cognitoPoolId = cognito_pool_id;
+        if (userBody.username) body.username = userBody.username;
+        if (userBody.password) body.password = userBody.password;
+        if (userBody.role) body.role = userBody.role;
+        if (userBody.promoCode) body.promoCode = userBody.promoCode;
+
+        if (userBody.accessToken) body.accessToken = userBody.accessToken;
+        if (userBody.refreshToken) body.refreshToken = userBody.refreshToken;
+        if (userBody.expiration) body.expiration = userBody.expiration;
+        if (userBody.refreshExpiration) body.refreshExpiration = userBody.refreshExpiration;
+
+        console.log(body);
         var options = {
             method: 'POST',
             uri: url,
