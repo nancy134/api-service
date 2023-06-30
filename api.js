@@ -37,7 +37,8 @@ var signUp = function(cognito_client_id, cognito_pool_id, userBody){
         if (userBody.refreshToken) body.refreshToken = userBody.refreshToken;
         if (userBody.expiration) body.expiration = userBody.expiration;
         if (userBody.refreshExpiration) body.refreshExpiration = userBody.refreshExpiration;
-
+        if (userBody.smartcarId) body.smartcarId = userBody.smartcarId;
+        
         console.log(body);
         var options = {
             method: 'POST',
