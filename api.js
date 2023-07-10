@@ -2427,3 +2427,30 @@ exports.getGooglePlaces = function(tenant, lat, long){
     });
 }
 
+exports.getSmartcarsMe = function(tenant, IdToken){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            userService.getSmartcarsMe(IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}
+
+exports.createSmartcarsMe = function(tenant, IdToken, body){
+    return new Promise(function(resolve, reject){
+        tenantService.getTenant(tenant).then(function(resp){
+            userService.createSmartcarsMe(body, IdToken, resp.cognito_client_id, resp.cognito_pool_id).then(function(result){
+                resolve(result);
+            }).catch(function(err){
+                reject(err);
+            });
+        }).catch(function(err){
+            reject(err);
+        });
+    });
+}

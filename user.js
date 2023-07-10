@@ -428,3 +428,38 @@ exports.clientsUpload = function(authParams, file, body){
         });
     });
 }
+
+exports.getSmartcarsMe = function(IdToken, cognito_client_id, cognito_pool_id){
+    return new Promise(function(resolve, reject){
+        var url = process.env.USER_SERVICE + "/users/me/smartcars";
+        var headers = utilities.createHeaders(IdToken, cognito_client_id, cognito_pool_id);
+        var options = {
+            url: url,
+            method: 'GET',
+            headers: headers
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
+exports.createSmartcarsMe = function(body, IdToken, cognito_client_id, cognito_pool_id){
+    return new Promise(function(resolve, reject){
+        var url = process.env.USER_SERVICE + "/users/me/smartcars";
+        var headers = utilities.createHeaders(IdToken, cognito_client_id, cognito_pool_id);
+        var options = {
+            url: url,
+            method: 'POST',
+            headers: headers,
+            data: body
+        };
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}

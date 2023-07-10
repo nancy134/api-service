@@ -1944,6 +1944,27 @@ app.get('/smartcar/google/places', (req, res) => {
     });
 });
 
+app.get('/users/me/smartcars', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.getSmartcarsMe(tenant, IdToken).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+app.post('/users/me/smartcars', (req, res) => {
+    var tenant = getTenantName(req);
+    var IdToken = getToken(req);
+    api.createSmartcarsMe(tenant, IdToken, req.body).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        errorResponse(res, err);
+    });
+});
+
+
 app.listen(PORT, HOST);
 
 module.exports = app;
